@@ -1,0 +1,11 @@
+{
+  "item.keepsakes.misc.hold_for_info": "Hold %s for additional information",
+
+  "item.keepsakes.eternal_snowflake": "Eternal Snowflake",
+  "item.keepsakes.eternal_snowflake.tooltip": "A frigid, complex fractal that contains the essence of Winter.",
+  "item.keepsakes.eternal_snowflake.frost_walker_explanation1": "- Freezes with a radius of 3 blocks around the player",
+  "item.keepsakes.eternal_snowflake.frost_walker_explanation2": "- Does not require the player to be grounded first",
+  "item.keepsakes.eternal_snowflake.frost_walker_explanation3": "- Works while standing still",
+  "item.keepsakes.eternal_snowflake.frost_walker": "Enhanced Frost Walker: %s",
+  "item.keepsakes.eternal_snowflake.frost_walker_toggle": "Enhanced Frost Walker: %s"
+}
