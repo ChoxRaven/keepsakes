@@ -1,9 +1,8 @@
 {
 	"required": true,
-	"package": "net.keepsakes.mixin.client",
+	"package": "net.keepsakes.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
