@@ -1,5 +1,7 @@
 package net.keepsakes.item.custom;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,8 +17,8 @@ public class HarvestersScythe extends SwordItem {
     public HarvestersScythe(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings
                 .maxCount(1)
-                .maxDamage(0)
-                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 7, -3.2f))
+                .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true))
+                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 7, -3.0f))
         );
     }
 
@@ -35,6 +37,6 @@ public class HarvestersScythe extends SwordItem {
 
             attacker.heal(healingAmount);
         }
-        return super.postHit(stack, target, attacker);
+        return true; // Return true without calling super to prevent item damage
     }
 }
