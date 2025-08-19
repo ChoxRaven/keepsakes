@@ -13,19 +13,26 @@ import java.util.List;
 
 public class HarvestersScythe extends SwordItem {
     public HarvestersScythe(ToolMaterial toolMaterial, Settings settings) {
-        super(toolMaterial, settings.attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 8, -3.2f)));
+        super(toolMaterial, settings
+                .maxCount(1)
+                .maxDamage(0)
+                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 7, -3.2f))
+        );
     }
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.tooltip").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.tooltip").formatted(Formatting.DARK_GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.explanation1").formatted(Formatting.GREEN));
     }
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (attacker instanceof PlayerEntity) {
+            // * Calculate how much the user should heal
             float damageDealt = target.getMaxHealth() - target.getHealth();
             float healingAmount = damageDealt * 0.1f;
+
             attacker.heal(healingAmount);
         }
         return super.postHit(stack, target, attacker);

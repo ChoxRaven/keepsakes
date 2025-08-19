@@ -3,9 +3,9 @@
 	"id": "keepsakes",
 	"version": "${version}",
 	"name": "keepsakes",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A Fabric mod to add various items and features tailor made for specific people",
 	"authors": [
-		"Me!"
+		"Chox"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",

@@ -26,9 +26,10 @@ import java.util.List;
 public class EternalSnowflake extends Item {
     // * Item Settings
     public EternalSnowflake(Settings settings) {
-        super(settings);
-        settings.maxCount(1);
-        settings.fireproof();
+        super(settings
+                .maxCount(1)
+                .fireproof()
+        );
     }
     
     // * Implement Frostwalker similarly to the enchantment
@@ -103,6 +104,10 @@ public class EternalSnowflake extends Item {
     // * Tooltip
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        // ? Hotbar requirement info
+        tooltip.add(Text.translatable("item.keepsakes.misc.passive_info").formatted(Formatting.LIGHT_PURPLE));
+
+        // ? Lore
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.tooltip").formatted(Formatting.BLUE));
 
         // * Add frost walker toggle status to tooltip
@@ -193,6 +198,7 @@ public class EternalSnowflake extends Item {
                     world.addParticle(ParticleTypes.SNOWFLAKE, x, y, z, vx, vy, vz);
                 }
             }
+
             // * Server-side: apply frost walker effect
             else if (isFrostWalkerEnabled(stack)) {
                 freezeWater(world, player);
