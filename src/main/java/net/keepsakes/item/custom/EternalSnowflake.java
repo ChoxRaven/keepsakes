@@ -22,6 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import java.util.List;
+
 public class EternalSnowflake extends Item {
     // * Item Settings
     public EternalSnowflake(Settings settings) {
