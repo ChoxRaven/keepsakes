@@ -1,6 +1,7 @@
 package net.keepsakes.item;
 
 import net.keepsakes.Keepsakes;
+import net.keepsakes.item.custom.ChrysalisOfEternity;
 import net.keepsakes.item.custom.EternalSnowflake;
 import net.keepsakes.item.custom.HarvestersScythe;
 import net.keepsakes.material.custom.GreenScrapMaterial;
@@ -38,7 +39,7 @@ public class ModItems {
     // ? Star's
     // Placeholder
     public static final Item CHRYSALIS_OF_ETERNITY = register(
-            new Item(new Item.Settings()),
+            new ChrysalisOfEternity(new Item.Settings()),
             "chrysalis_of_eternity"
     );
 
