@@ -39,8 +39,8 @@ public class ChrysalisOfEternity extends Item {
 
         // * Add King Azamoth's Ambition toggle status to tooltip
         boolean ambitionEnabled = isAmbitionEnabled(stack);
-        Formatting frostwalkerFormatting = ambitionEnabled ? Formatting.AQUA : Formatting.GRAY;
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
+        Formatting frostwalkerFormatting = ambitionEnabled ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
+        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition",
                 ambitionEnabled ? "ON" : "OFF").formatted(frostwalkerFormatting));
 
         // ? Explanation for King Azamoth's Ambition
