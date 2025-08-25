@@ -25,22 +25,38 @@ public class ModItems {
 
     // ? Items
     // ? Miera's
+    // Such a fridge type item
     public static final Item ETERNAL_SNOWFLAKE = register(
             new EternalSnowflake(new Item.Settings()),
             "eternal_snowflake"
     );
 
+    // ? Ordovis's
+    // Lets dance!
+    public static final Item HF_MURASAMA = register(
+            new Item(new Item.Settings()),
+            "hf_murasama"
+    );
+
     // ? Chox's
+    // Bandit + Scythe
     public static final Item HARVESTERS_SCYTHE = register(
             new HarvestersScythe(GreenScrapMaterial.INSTANCE, new Item.Settings()),
             "harvesters_scythe"
     );
 
     // ? Star's
-    // Placeholder
+    // LEAN
     public static final Item CHRYSALIS_OF_ETERNITY = register(
             new ChrysalisOfEternity(new Item.Settings()),
             "chrysalis_of_eternity"
+    );
+
+    // ? Kix's
+    // Wing Stance Aura
+    public static final Item MILADY_GREATSWORD = register(
+            new Item(new Item.Settings()),
+            "milday_greatsword"
     );
 
     // ? Init functions
