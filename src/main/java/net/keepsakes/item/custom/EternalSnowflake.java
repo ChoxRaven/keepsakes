@@ -110,21 +110,16 @@ public class EternalSnowflake extends Item {
         // ? Lore
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.tooltip").formatted(Formatting.BLUE));
 
-        // * Add frost walker toggle status to tooltip
+        // * Add Enhanced Frost Walker toggle status to tooltip
         boolean frostWalkerEnabled = isFrostWalkerEnabled(stack);
-        Formatting formatting = frostWalkerEnabled ? Formatting.AQUA : Formatting.GRAY;
+        Formatting frostwalkerFormatting = frostWalkerEnabled ? Formatting.AQUA : Formatting.GRAY;
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
-                frostWalkerEnabled ? "ON" : "OFF").formatted(formatting));
+                frostWalkerEnabled ? "ON" : "OFF").formatted(frostwalkerFormatting));
         
-        // ? Features for Enhanced Frost Walker
-        if (frostWalkerEnabled) {
-            tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation1")
-                    .formatted(Formatting.GRAY));
-            tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation2")
-                    .formatted(Formatting.GRAY));
-            tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation3")
-                    .formatted(Formatting.GRAY));
-        }
+        // ? Explanation for Enhanced Frost Walker
+        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation1").formatted(frostwalkerFormatting));
+        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation2").formatted(frostwalkerFormatting));
+        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation3").formatted(frostwalkerFormatting));
     }
 
     // ? Toggle for Frost Walker
@@ -134,7 +129,7 @@ public class EternalSnowflake extends Item {
 
         // * Toggle Frostwalker
         boolean currentState = isFrostWalkerEnabled(stack);
-        setFrostWalkerEnabled(stack, !currentState);
+        setFrostWalkerStatus(stack, !currentState);
 
         // * Play sound effect for feedback
         world.playSound(null, user.getX(), user.getY(), user.getZ(),
@@ -145,31 +140,31 @@ public class EternalSnowflake extends Item {
         if (world.isClient) {
             boolean newState = !currentState;
             Formatting formatting = newState ? Formatting.AQUA : Formatting.GRAY;
-            user.sendMessage(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_toggle",
+            user.sendMessage(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
                     newState ? "ON" : "OFF").formatted(formatting), true);
         }
 
         return TypedActionResult.success(stack, true);
     }
     
-    // Helper methods for item components
+    // ? Helper methods for item components
     private boolean isFrostWalkerEnabled(ItemStack stack) {
-        // Check if the stack has the custom_data component with our FrostWalker property
+        // * Check if the stack has the custom_data component with our FrostWalker property
         NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
         if (customData != null) {
-            // Get the NBT compound and check for our property
+            // * Get the NBT compound and check for our property
             return customData.copyNbt().getBoolean("FrostWalker");
         }
         return false;
     }
     
-    private void setFrostWalkerEnabled(ItemStack stack, boolean enabled) {
-        // Get or create the custom_data component
+    private void setFrostWalkerStatus(ItemStack stack, boolean enabled) {
+        // * Get or create the custom_data component
         NbtComponent customData = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
-        // Create a new NBT compound with our property
+        // * Create a new NBT compound with the property
         NbtCompound nbt = customData.copyNbt();
         nbt.putBoolean("FrostWalker", enabled);
-        // Set the updated component back to the stack
+        // * Set the updated component
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
     }
 
@@ -183,7 +178,7 @@ public class EternalSnowflake extends Item {
 
         // * Make sure the entity is a player
         if (entity instanceof PlayerEntity player) {
-            // * Client-side: spawn particles
+            // * spawn client-side particles
             if (world.isClient) {
                 Random random = world.getRandom();
                 if (random.nextFloat() < 0.4f) { // ? 30% chance each tick to spawn particles

@@ -4,13 +4,19 @@
 
   "item.keepsakes.eternal_snowflake": "§bEternal Snowflake",
   "item.keepsakes.eternal_snowflake.tooltip": "A frigid, complex fractal that contains the essence of Winter.",
+  "item.keepsakes.eternal_snowflake.frost_walker": "Enhanced Frost Walker: %s",
   "item.keepsakes.eternal_snowflake.frost_walker_explanation1": "- Freezes with a radius of 3 blocks around the player",
   "item.keepsakes.eternal_snowflake.frost_walker_explanation2": "- Does not require the player to be grounded first",
   "item.keepsakes.eternal_snowflake.frost_walker_explanation3": "- Works while standing still",
-  "item.keepsakes.eternal_snowflake.frost_walker": "Enhanced Frost Walker: %s",
-  "item.keepsakes.eternal_snowflake.frost_walker_toggle": "Enhanced Frost Walker: %s",
 
   "item.keepsakes.harvesters_scythe": "§aHarvester's Scythe",
-  "item.keepsakes.harvesters_scythe.tooltip": "It takes a brave man to look death in the eye and claim they don't need help.",
-  "item.keepsakes.harvesters_scythe.explanation1": "Lifesteals 10% of the damage dealt to the target"
+  "item.keepsakes.harvesters_scythe.tooltip": "\"It takes a brave man to look death in the eye and claim they don't need help.\"",
+  "item.keepsakes.harvesters_scythe.explanation1": "Lifesteal 10% of the damage taken by the target(s)",
+
+  "item.keepsakes.chrysalis_of_eternity": "§dChrysalis of Eternity",
+  "item.keepsakes.chrysalis_of_eternity.tooltip": "\"What good are kings in the realm of gods?\"",
+  "item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition": "King Azamoth's Ambition: %s",
+  "item.keepsakes.chrysalis_of_eternity.stats_explanation1": "- Increases Attack Speed by 0.2",
+  "item.keepsakes.chrysalis_of_eternity.stats_explanation2": "- Increases Damage by by 0.5",
+  "item.keepsakes.chrysalis_of_eternity.stats_explanation3": "- Decreases Armor by 6"
 }
