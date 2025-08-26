@@ -1,5 +1,6 @@
 package net.keepsakes.item.custom;
 
+import net.keepsakes.Keepsakes;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
@@ -15,6 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
@@ -108,17 +110,22 @@ public class ChrysalisOfEternity extends Item {
             // * spawn client-side particles
             if (world.isClient) {
                 Random random = world.getRandom();
-                if (random.nextFloat() < 0.4f) { // ? 30% chance each tick to spawn particles
-                    double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
-                    double y = player.getY() + random.nextFloat() * 2.0;
-                    double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
-
-                    double vx = (random.nextFloat() * 2.0 - 1.0) * 0.01;
-                    double vy = random.nextFloat() * 0.05;
-                    double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
-
-                    world.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
-                }
+                // * Spawn particles around the player
+//              if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
+//                  double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
+//                  double y = player.getY() + random.nextFloat() * 2.0;
+//                  double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
+//
+//                  double vx = (random.nextFloat() * 2.0 - 1.0) * 0.01;
+//                  double vy = random.nextFloat() * 0.05;
+//                  double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
+//
+//                  world.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
+//              }
+                // * Spawn particles on the player
+                // TODO: make the particle follow the player smoothly
+                Vec3d playerVelocity = player.getVelocity();
+                world.addParticle(Keepsakes.AMBITION_HALO_PARTICLE, player.getX(), player.getY() + 2.0f, player.getZ(), playerVelocity.x, playerVelocity.y, playerVelocity.z);
             }
         }
     }
