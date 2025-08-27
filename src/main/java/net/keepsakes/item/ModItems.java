@@ -45,6 +45,12 @@ public class ModItems {
             "harvesters_scythe"
     );
 
+    // Buffs when out in the sun
+    public static final Item RADIANT_VIRTUE = register(
+            new Item(new Item.Settings()),
+            "radiant_virtue"
+    );
+
     // ? Star's
     // LEAN
     public static final Item CHRYSALIS_OF_ETERNITY = register(
