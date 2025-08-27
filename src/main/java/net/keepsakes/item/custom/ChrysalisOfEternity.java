@@ -11,8 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -20,13 +18,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class ChrysalisOfEternity extends Item {
     public ChrysalisOfEternity(Settings settings) {
@@ -157,7 +152,6 @@ public class ChrysalisOfEternity extends Item {
         if (entity instanceof PlayerEntity player) {
             // ? Run only serverside to ensure data is synced
             if (!world.isClient) {
-                Random random = world.getRandom();
                 applyOrRemoveModifiers(player, inHotbar, isAmbitionEnabled(stack));
             }
         }

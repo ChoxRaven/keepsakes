@@ -16,11 +16,8 @@ public class ModItems {
         // * Create the identifier for the item.
         Identifier itemID = Identifier.of(Keepsakes.MOD_ID, id);
 
-        // * Register the item.
-        Item registeredItem = Registry.register(Registries.ITEM, itemID, item);
-
         // * Return the registered item
-        return registeredItem;
+        return Registry.register(Registries.ITEM, itemID, item);
     }
 
     // ? Items
