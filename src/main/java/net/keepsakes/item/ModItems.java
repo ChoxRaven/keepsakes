@@ -1,11 +1,13 @@
 package net.keepsakes.item;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.custom.ChrysalisOfEternity;
+import net.keepsakes.item.accessory.ChrysalisOfEternity;
 import net.keepsakes.item.custom.EternalSnowflake;
+import net.keepsakes.item.custom.HFMurasama;
 import net.keepsakes.item.custom.HarvestersScythe;
-import net.keepsakes.material.custom.GreenScrapMaterial;
+import net.keepsakes.material.custom.CarbonSteelMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -31,14 +33,14 @@ public class ModItems {
     // ? Ordovis's
     // Lets dance!
     public static final Item HF_MURASAMA = register(
-            new Item(new Item.Settings()),
+            new HFMurasama(CarbonSteelMaterial.INSTANCE, new Item.Settings()),
             "hf_murasama"
     );
 
     // ? Chox's
     // Bandit + Scythe
     public static final Item HARVESTERS_SCYTHE = register(
-            new HarvestersScythe(GreenScrapMaterial.INSTANCE, new Item.Settings()),
+            new HarvestersScythe(ToolMaterials.NETHERITE, new Item.Settings()),
             "harvesters_scythe"
     );
 
@@ -46,6 +48,12 @@ public class ModItems {
     public static final Item RADIANT_VIRTUE = register(
             new Item(new Item.Settings()),
             "radiant_virtue"
+    );
+
+    // Buffs based on the stats of the current biome (hot, cold, humid, etc.)
+    public static final Item ASPECT_OF_THE_ELEMENTS = register(
+            new Item(new Item.Settings()),
+            "aspect_of_the_elements"
     );
 
     // ? Star's
@@ -56,7 +64,7 @@ public class ModItems {
     );
 
     // ? Kix's
-    // Wing Stance Aura
+    // Aurafarming weapon
     public static final Item MILADY_GREATSWORD = register(
             new Item(new Item.Settings()),
             "milday_greatsword"

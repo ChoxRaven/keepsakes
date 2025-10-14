@@ -6,9 +6,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 
-import javax.swing.text.html.HTML;
-
-public class GreenScrapMaterial implements ToolMaterial {
+public class CarbonSteelMaterial implements ToolMaterial {
     // ? Stats
     @Override
     public int getDurability() {
@@ -41,5 +39,5 @@ public class GreenScrapMaterial implements ToolMaterial {
     }
 
     // * Creates a instance for usage
-    public static final GreenScrapMaterial INSTANCE = new GreenScrapMaterial();
+    public static final CarbonSteelMaterial INSTANCE = new CarbonSteelMaterial();
 }

@@ -13,11 +13,8 @@
     import net.minecraft.util.Identifier;
     import net.minecraft.util.math.RotationAxis;
     import org.joml.Vector3f;
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
 
     public class AmbitionBillboardFeatureRenderer extends FeatureRenderer {
-        public static final Logger LOGGER = LoggerFactory.getLogger(Keepsakes.MOD_ID);
         private static final Identifier TEXTURE = Identifier.of(Keepsakes.MOD_ID, "textures/particle/ambition_halo_texture.png");
 
         public AmbitionBillboardFeatureRenderer(FeatureRendererContext context) {
@@ -34,13 +31,12 @@
                 matrices.push();
 
                 // Translate to the player's head
-                matrices.translate(0.0D, entity.getHeight() - 2f, 0.0D);
+                matrices.translate(0.0D, entity.getHeight() - 2.2f, 0.0D);
 
                 // Client camera
                 Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
 
-                // TODO : Make this actually fucking work because mojang seems to make the body rotation hardcoded
-                //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-entity.getBodyYaw()));
+                // TODO : counteract the playerEntity's body rotation, or use a different rendering method
 
                 // Apply rotation
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw()));

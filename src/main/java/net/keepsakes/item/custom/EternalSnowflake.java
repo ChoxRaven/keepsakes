@@ -32,21 +32,15 @@ public class EternalSnowflake extends Item {
         );
     }
     
-    // * Implement Frostwalker similarly to the enchantment
+    // ? Freezes all water under the player, in a radius
     private void freezeWater(World world, PlayerEntity player) {
         if (world.isClient) {
             return; // Ensure this only runs on server
         }
 
         BlockPos playerPos = player.getBlockPos();
-        int radius = 3; // Freeze water within 3 blocks radius
-
+        int radius = 3;
         int yOffset = -1;
-        // TODO: If possible find a way to make iceboating less buggy
-        //if (player.hasVehicle() && player.getVehicle() != null) {
-        //    // When in boat, player is at water level, so check same level
-        //      yOffset = 0;
-        //  }
         
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
@@ -59,33 +53,21 @@ public class EternalSnowflake extends Item {
     }
     
     private boolean shouldFreezeWater(World world, BlockPos pos, PlayerEntity player) {
-        // Calculate player's actual water level position
-        double playerY = player.getY();
-        if (player.hasVehicle() && player.getVehicle() != null) {
-            // When in boat, player is at water level, so use actual position
-            playerY = player.getY();
-        }
-        
-        if (!pos.isWithinDistance(new Vec3d(player.getX(), playerY, player.getZ()), 3.5f)) {
+        // * Checks if the block is within a specified distance from the Player
+        if (!pos.isWithinDistance(new Vec3d(player.getX(), player.getY(), player.getZ()), 3.5f)) {
             return false;
         }
-        
-        // Ensure water has air directly above it
-        BlockPos abovePos = pos.up();
-        if (!world.getBlockState(abovePos).isAir()) {
+
+        // * Checks if the water block is a source block
+        BlockState waterState = world.getBlockState(pos);
+        if (waterState.getBlock() != Blocks.WATER || !waterState.getFluidState().isStill()) {
             return false;
         }
-        
-        // Ensure water is at surface level (not under another water block)
+
+        // * Checks if the water block is under air, and above a solid, or another water block
         BlockPos belowPos = pos.down();
         BlockState belowState = world.getBlockState(belowPos);
-        boolean isSurfaceWater = belowState.isSolidBlock(world, belowPos) || 
-                                belowState.getBlock() == Blocks.WATER;
-        
-        BlockState waterState = world.getBlockState(pos);
-        return waterState.getBlock() == Blocks.WATER && 
-               waterState.getFluidState().isStill() && 
-               isSurfaceWater;
+        return (belowState.isSolidBlock(world, belowPos) || belowState.getBlock() == Blocks.WATER) && world.isAir(pos.up());
     }
     
     private void freezeSingleBlock(World world, BlockPos pos, PlayerEntity player) {
@@ -96,7 +78,7 @@ public class EternalSnowflake extends Item {
         BlockState iceState = Blocks.FROSTED_ICE.getDefaultState();
         world.setBlockState(pos, iceState, 11); // Flag 11 = UPDATE_NEIGHBORS + UPDATE_CLIENTS
         
-        // Schedule a tick for the frosted ice to melt (vanilla Frost Walker uses 600 ticks)
+        // * Schedule a tick for the frosted ice to melt (vanilla Frost Walker uses 600 ticks)
         world.scheduleBlockTick(pos, Blocks.FROSTED_ICE, 
                          MathHelper.nextInt(player.getRandom(), 600, 800));
     }
@@ -147,17 +129,18 @@ public class EternalSnowflake extends Item {
         return TypedActionResult.success(stack, true);
     }
     
-    // ? Helper methods for item components
+    // ? Checks if Frost Walker is enabled
     private boolean isFrostWalkerEnabled(ItemStack stack) {
         // * Check if the stack has the custom_data component with our FrostWalker property
         NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
         if (customData != null) {
-            // * Get the NBT compound and check for our property
+            // * Get the NBT compound and check for Enhanced Frost Walker
             return customData.copyNbt().getBoolean("FrostWalker");
         }
         return false;
     }
-    
+
+    // ? Toggles Frost Walker
     private void setFrostWalkerStatus(ItemStack stack, boolean enabled) {
         // * Get or create the custom_data component
         NbtComponent customData = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
@@ -168,20 +151,19 @@ public class EternalSnowflake extends Item {
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
     }
 
-    // * Per tick, while in the player hotbar
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        // * Skip if not in hotbar (slots 0-8)
+        // ? Hotbar check
         if (slot > 8) {
             return;
         }
 
-        // * Make sure the entity is a player
+        // ? Player check
         if (entity instanceof PlayerEntity player) {
-            // * spawn client-side particles
+            // * Spawn client-side particles
             if (world.isClient) {
                 Random random = world.getRandom();
-                if (random.nextFloat() < 0.4f) { // ? 30% chance each tick to spawn particles
+                if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
                     double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
                     double y = player.getY() + random.nextFloat() * 2.0;
                     double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
@@ -194,7 +176,7 @@ public class EternalSnowflake extends Item {
                 }
             }
 
-            // * Server-side: apply frost walker effect
+            // * Freeze blocks in a radius around the Player
             else if (isFrostWalkerEnabled(stack)) {
                 freezeWater(world, player);
             }
