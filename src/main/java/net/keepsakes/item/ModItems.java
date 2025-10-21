@@ -56,11 +56,30 @@ public class ModItems {
             "aspect_of_the_elements"
     );
 
+    // The finales
+    public static final Item DEMATERIALIZER = register(
+            new Item(new Item.Settings()),
+            "dematerializer"
+    );
+
     // ? Star's
     // LEAN
     public static final Item CHRYSALIS_OF_ETERNITY = register(
             new ChrysalisOfEternity(new Item.Settings()),
             "chrysalis_of_eternity"
+    );
+
+    // ? Litsu's
+    // Spy TF2
+    public static final Item DEADRINGER = register(
+            new Item(new Item.Settings()),
+            "deadringer"
+    );
+
+    // Schizoid
+    public static final Item LUCY_THE_AXE = register(
+            new Item(new Item.Settings()),
+            "lucy_the_axe"
     );
 
     // ? Kix's

@@ -14,9 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
-    // ! TEMP LOGGER
-    private static final Logger LOGGER = LoggerFactory.getLogger(Keepsakes.MOD_ID);
-
     @Shadow
     protected abstract void loadItemModel(ModelIdentifier id);
 

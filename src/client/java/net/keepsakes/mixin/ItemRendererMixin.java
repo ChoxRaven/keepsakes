@@ -1,7 +1,6 @@
 package net.keepsakes.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.keepsakes.Keepsakes;
 import net.keepsakes.item.ModItems;
 import net.minecraft.client.MinecraftClient;
@@ -17,38 +16,38 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
     @Unique
-    private FabricBakedModel registerItemModel(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ModelTransformationMode renderMode, Item item, String path) {
-        if (stack.getItem() == item
-                && (renderMode == ModelTransformationMode.GUI
-                || renderMode == ModelTransformationMode.GROUND
-                || renderMode == ModelTransformationMode.FIXED)) {
+    private static final Map<Item, String> ITEM_MODELS = new HashMap<>();
+    @Unique
+    private static final Map<Item, String> HANDHELD_MODELS = new HashMap<>();
 
-            // Use the inventory variant for GUI/ground/fixed
-            ModelIdentifier modelId = ModelIdentifier.ofInventoryVariant(
-                    Identifier.of(Keepsakes.MOD_ID, path)
-            );
-            BakedModel customModel = MinecraftClient.getInstance().getBakedModelManager().getModel(modelId);
+    static {
+        // Register inventory/GUI models
+        ITEM_MODELS.put(ModItems.HARVESTERS_SCYTHE, "harvesters_scythe");
+        ITEM_MODELS.put(ModItems.HF_MURASAMA, "hf_murasama");
 
-            // Fallback if not found
-            return customModel != null ? customModel : bakedModel;
-        }
-        return null;
+        // Register handheld models
+        HANDHELD_MODELS.put(ModItems.HARVESTERS_SCYTHE, "harvesters_scythe_handheld");
+        HANDHELD_MODELS.put(ModItems.HF_MURASAMA, "hf_murasama_handheld");
     }
 
     @Unique
-    private FabricBakedModel registerHeldItemModel(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack, Item item, String path) {
-        if (stack.getItem() == item) {
-            ModelIdentifier modelId = ModelIdentifier.ofInventoryVariant(
-                    Identifier.of(Keepsakes.MOD_ID, path)
-            );
-            BakedModel customModel = MinecraftClient.getInstance().getBakedModelManager().getModel(modelId);
-
-            return customModel != null ? customModel : bakedModel;
+    private BakedModel getCustomModel(BakedModel bakedModel, ItemStack stack, String modelPath) {
+        if (modelPath == null) {
+            return bakedModel;
         }
-        return null;
+
+        ModelIdentifier modelId = ModelIdentifier.ofInventoryVariant(
+                Identifier.of(Keepsakes.MOD_ID, modelPath)
+        );
+        BakedModel customModel = MinecraftClient.getInstance().getBakedModelManager().getModel(modelId);
+
+        return customModel != null ? customModel : bakedModel;
     }
 
     @ModifyVariable(
@@ -57,8 +56,15 @@ public class ItemRendererMixin {
             argsOnly = true
     )
     public BakedModel renderItem(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ModelTransformationMode renderMode) {
-        registerItemModel(bakedModel, stack, renderMode, ModItems.HARVESTERS_SCYTHE, "harvesters_scythe");
-        registerItemModel(bakedModel, stack, renderMode, ModItems.HF_MURASAMA, "hf_murasama");
+        if (renderMode == ModelTransformationMode.GUI
+                || renderMode == ModelTransformationMode.GROUND
+                || renderMode == ModelTransformationMode.FIXED) {
+
+            String modelPath = ITEM_MODELS.get(stack.getItem());
+            if (modelPath != null) {
+                return getCustomModel(bakedModel, stack, modelPath);
+            }
+        }
 
         return bakedModel;
     }
@@ -68,10 +74,11 @@ public class ItemRendererMixin {
             at = @At(value = "STORE"),
             ordinal = 1
     )
-
     public BakedModel getHeldItemModelMixin(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack) {
-        registerHeldItemModel(bakedModel, stack, ModItems.HARVESTERS_SCYTHE, "harvesters_scythe_handheld");
-        registerHeldItemModel(bakedModel, stack, ModItems.HF_MURASAMA, "hf_murasama_handheld");
+        String modelPath = HANDHELD_MODELS.get(stack.getItem());
+        if (modelPath != null) {
+            return getCustomModel(bakedModel, stack, modelPath);
+        }
 
         return bakedModel;
     }

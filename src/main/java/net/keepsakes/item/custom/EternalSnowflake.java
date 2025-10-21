@@ -4,6 +4,7 @@ import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.component.DataComponentTypes;
@@ -32,7 +33,7 @@ public class EternalSnowflake extends AccessoryItem {
                 .fireproof()
         );
     }
-    
+
     // ? Freezes all water under the player, in a radius
     private void freezeWater(World world, PlayerEntity player) {
         if (world.isClient) {
