@@ -1,7 +1,7 @@
 package net.keepsakes.item;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.accessory.ChrysalisOfEternity;
+import net.keepsakes.item.custom.ChrysalisOfEternity;
 import net.keepsakes.item.custom.EternalSnowflake;
 import net.keepsakes.item.custom.HFMurasama;
 import net.keepsakes.item.custom.HarvestersScythe;

@@ -1,4 +1,4 @@
-package net.keepsakes.item.accessory;
+package net.keepsakes.item.custom;
 
 import io.wispforest.accessories.api.AccessoryItem;
 import io.wispforest.accessories.api.attributes.AccessoryAttributeBuilder;
