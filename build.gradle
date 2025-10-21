@@ -19,6 +19,17 @@ repositories {
     maven { url 'https://maven.wispforest.io/releases' }
     maven { url 'https://maven.su5ed.dev/releases' }
     maven { url 'https://maven.fabricmc.net' }
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 loom {
@@ -50,6 +61,12 @@ dependencies {
 
     // Accessories API
     modImplementation("io.wispforest:accessories-fabric:${project.accessories_version}")
+
+	// Text Animator API
+	modImplementation("maven.modrinth:text-animator:${project.text_animator_version}")
+
+	// Attribute Fix
+	modImplementation("maven.modrinth:attributefix:${project.attribute_fix_version}")
 }
 
 processResources {
