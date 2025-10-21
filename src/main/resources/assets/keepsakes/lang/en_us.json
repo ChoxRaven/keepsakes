@@ -1,6 +1,6 @@
 {
   "item.keepsakes.misc.hold_for_info": "Hold %s for additional information",
-  "item.keepsakes.misc.passive_info": "Passive item - Hotbar slot required",
+  "item.keepsakes.misc.toggle_info": "Sneak + Use to toggle effect(s)",
 
   "item.keepsakes.eternal_snowflake": "§bEternal Snowflake",
   "item.keepsakes.eternal_snowflake.tooltip": "A frigid, complex fractal that contains the essence of Winter.",

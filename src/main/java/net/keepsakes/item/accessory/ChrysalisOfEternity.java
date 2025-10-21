@@ -23,12 +23,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ChrysalisOfEternity extends AccessoryItem {
+    // * Item Settings
     public ChrysalisOfEternity(Settings settings) {
         super(settings
                 .maxCount(1)
@@ -39,6 +38,9 @@ public class ChrysalisOfEternity extends AccessoryItem {
     // * Tooltip
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        // ? Toggle info
+        tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
+
         // ? Lore
         tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.tooltip").formatted(Formatting.GRAY));
 
@@ -84,7 +86,7 @@ public class ChrysalisOfEternity extends AccessoryItem {
         // * Check if the stack has the custom_data component with the Ambition property
         NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
         if (customData != null) {
-            // * Get the NBT compound and check for our property
+            // * Get the NBT compound and check for the property
             return customData.copyNbt().getBoolean("Ambition");
         }
         return false;
@@ -116,9 +118,6 @@ public class ChrysalisOfEternity extends AccessoryItem {
         }
     }
 
-    // Temp Logger
-    public static final Logger LOGGER = LoggerFactory.getLogger(Keepsakes.MOD_ID);
-
     // * Runs per tick while equipped by a player
     @Override
     public void tick(ItemStack stack, SlotReference reference) {
@@ -143,7 +142,7 @@ public class ChrysalisOfEternity extends AccessoryItem {
                 double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
 
                 ((ServerWorld) player.getWorld()).spawnParticles(
-                        ParticleTypes.SNOWFLAKE, x, y, z, 1, vx, vy, vz, 0.0
+                        ParticleTypes.SOUL, x, y, z, 1, vx, vy, vz, 0.0
                 );
             }
         }

@@ -1,15 +1,16 @@
 package net.keepsakes.item.custom;
+import io.wispforest.accessories.api.AccessoryItem;
+import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -23,7 +24,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import java.util.List;
 
-public class EternalSnowflake extends Item {
+public class EternalSnowflake extends AccessoryItem {
     // * Item Settings
     public EternalSnowflake(Settings settings) {
         super(settings
@@ -86,8 +87,8 @@ public class EternalSnowflake extends Item {
     // * Tooltip
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        // ? Hotbar requirement info
-        tooltip.add(Text.translatable("item.keepsakes.misc.passive_info").formatted(Formatting.LIGHT_PURPLE));
+        // ? Toggle info
+        tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
 
         // ? Lore
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.tooltip").formatted(Formatting.BLUE));
@@ -109,16 +110,16 @@ public class EternalSnowflake extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        // * Toggle Frostwalker
+        // * Toggles Frostwalker
         boolean currentState = isFrostWalkerEnabled(stack);
         setFrostWalkerStatus(stack, !currentState);
 
-        // * Play sound effect for feedback
+        // * Plays a sound effect for feedback
         world.playSound(null, user.getX(), user.getY(), user.getZ(),
                 currentState ? SoundEvents.BLOCK_SNOW_BREAK : SoundEvents.BLOCK_GLASS_PLACE,
                 SoundCategory.PLAYERS, 2f, currentState ? 0.5f : 1.2f);
 
-        // * Send message to player
+        // * Sends message to player
         if (world.isClient) {
             boolean newState = !currentState;
             Formatting formatting = newState ? Formatting.AQUA : Formatting.GRAY;
@@ -131,10 +132,10 @@ public class EternalSnowflake extends Item {
     
     // ? Checks if Frost Walker is enabled
     private boolean isFrostWalkerEnabled(ItemStack stack) {
-        // * Check if the stack has the custom_data component with our FrostWalker property
+        // * Checks if the stack has the custom_data component with the property
         NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
         if (customData != null) {
-            // * Get the NBT compound and check for Enhanced Frost Walker
+            // * Gets the NBT compound and check for Enhanced Frost Walker
             return customData.copyNbt().getBoolean("FrostWalker");
         }
         return false;
@@ -144,41 +145,42 @@ public class EternalSnowflake extends Item {
     private void setFrostWalkerStatus(ItemStack stack, boolean enabled) {
         // * Get or create the custom_data component
         NbtComponent customData = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
-        // * Create a new NBT compound with the property
+        // * Creates a new NBT compound with the property
         NbtCompound nbt = customData.copyNbt();
         nbt.putBoolean("FrostWalker", enabled);
-        // * Set the updated component
+        // * Sets the updated component
         stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
     }
 
+    // * Runs per tick while equipped by a player
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        // ? Hotbar check
-        if (slot > 8) {
+    public void tick(ItemStack stack, SlotReference reference) {
+        if (!(reference.entity() instanceof PlayerEntity player)) {
             return;
         }
 
-        // ? Player check
-        if (entity instanceof PlayerEntity player) {
-            // * Spawn client-side particles
-            if (world.isClient) {
-                Random random = world.getRandom();
-                if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
-                    double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
-                    double y = player.getY() + random.nextFloat() * 2.0;
-                    double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
+        if (player.isSpectator()) {
+            return;
+        }
 
-                    double vx = (random.nextFloat() * 2.0 - 1.0) * 0.01;
-                    double vy = random.nextFloat() * 0.05;
-                    double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
+        // * Spawn particles, and freeze
+        if (!(player.getEntityWorld().isClient) && isFrostWalkerEnabled(stack)) {
+            // * Freeze all water sources around the player
+            freezeWater(player.getEntityWorld(), player);
 
-                    world.addParticle(ParticleTypes.SNOWFLAKE, x, y, z, vx, vy, vz);
-                }
-            }
+            Random random = player.getEntityWorld().getRandom();
+            if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
+                double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
+                double y = player.getY() + random.nextFloat() * 2.0;
+                double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
 
-            // * Freeze blocks in a radius around the Player
-            else if (isFrostWalkerEnabled(stack)) {
-                freezeWater(world, player);
+                double vx = (random.nextFloat() * 2.0 - 1.0) * 0.01;
+                double vy = random.nextFloat() * 0.05;
+                double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
+
+                ((ServerWorld) player.getWorld()).spawnParticles(
+                        ParticleTypes.SNOWFLAKE, x, y, z, 1, vx, vy, vz, 0.0
+                );
             }
         }
     }
