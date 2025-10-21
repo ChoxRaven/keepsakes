@@ -42,13 +42,13 @@ public class ChrysalisOfEternity extends AccessoryItem {
         tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
 
         // ? Lore
-        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.tooltip").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.tooltip").formatted(Formatting.DARK_GRAY));
 
         // * Add King Azamoth's Ambition toggle status to tooltip
         boolean ambitionEnabled = isAmbitionEnabled(stack);
         Formatting ambitionFormatting = ambitionEnabled ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
         tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition",
-                ambitionEnabled ? "ON" : "OFF").formatted(ambitionFormatting));
+                ambitionEnabled ? "<neon>ON</neon>" : "OFF").formatted(ambitionFormatting));
 
         // ? Explanation for King Azamoth's Ambition
         tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.stats_explanation1").formatted(ambitionFormatting));
@@ -75,7 +75,7 @@ public class ChrysalisOfEternity extends AccessoryItem {
             boolean newState = !currentState;
             Formatting formatting = newState ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
             user.sendMessage(Text.translatable("item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition",
-                    newState ? "ON" : "OFF").formatted(formatting), true);
+                    newState ? "<neon>ON</neon>" : "OFF").formatted(formatting), true);
         }
 
         return TypedActionResult.success(stack, true);

@@ -91,13 +91,13 @@ public class EternalSnowflake extends AccessoryItem {
         tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
 
         // ? Lore
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.tooltip").formatted(Formatting.BLUE));
+        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.tooltip").formatted(Formatting.DARK_GRAY));
 
         // * Add Enhanced Frost Walker toggle status to tooltip
         boolean frostWalkerEnabled = isFrostWalkerEnabled(stack);
         Formatting frostwalkerFormatting = frostWalkerEnabled ? Formatting.AQUA : Formatting.GRAY;
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
-                frostWalkerEnabled ? "ON" : "OFF").formatted(frostwalkerFormatting));
+                frostWalkerEnabled ? "<neon>ON</neon>" : "OFF").formatted(frostwalkerFormatting));
         
         // ? Explanation for Enhanced Frost Walker
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation1").formatted(frostwalkerFormatting));
@@ -124,7 +124,7 @@ public class EternalSnowflake extends AccessoryItem {
             boolean newState = !currentState;
             Formatting formatting = newState ? Formatting.AQUA : Formatting.GRAY;
             user.sendMessage(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
-                    newState ? "ON" : "OFF").formatted(formatting), true);
+                    newState ? "<neon>ON</neon>" : "OFF").formatted(formatting), true);
         }
 
         return TypedActionResult.success(stack, true);
