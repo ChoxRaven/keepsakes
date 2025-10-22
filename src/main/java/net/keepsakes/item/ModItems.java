@@ -33,7 +33,7 @@ public class ModItems {
     // ? Ordovis's
     // Lets dance!
     public static final Item HF_MURASAMA = register(
-            new HFMurasama(CarbonSteelMaterial.INSTANCE, new Item.Settings()),
+            new HFMurasama(ToolMaterials.NETHERITE, new Item.Settings()),
             "hf_murasama"
     );
 

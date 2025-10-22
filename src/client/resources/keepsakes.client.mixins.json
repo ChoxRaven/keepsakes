@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"ItemRendererMixin",
-		"ModelLoaderMixin"
+		"ModelLoaderMixin",
+        "DisableLeftClickMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

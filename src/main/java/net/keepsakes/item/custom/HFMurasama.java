@@ -20,7 +20,7 @@ public class HFMurasama extends SwordItem {
         super(toolMaterial, settings
                 .maxCount(1)
                 .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true))
-                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 6, -2.0f))
+                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 3, -2.0f))
                 .fireproof()
         );
     }
