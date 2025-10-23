@@ -38,8 +38,6 @@ public class ItemRendererMixin {
 
     @Unique
     private BakedModel getCustomModel(BakedModel bakedModel, ItemStack stack, String modelPath) {
-        Keepsakes.LOGGER.info("getCustomModel called for item: {}, requested path: {}", stack.getItem(), modelPath); // Added log
-
         if (modelPath == null) {
             return bakedModel;
         }
@@ -47,10 +45,8 @@ public class ItemRendererMixin {
         ModelIdentifier modelId = ModelIdentifier.ofInventoryVariant(
                 Identifier.of(Keepsakes.MOD_ID, modelPath)
         );
-        Keepsakes.LOGGER.info("Looking for model with ID: {}", modelId); // Added log
 
         BakedModel customModel = MinecraftClient.getInstance().getBakedModelManager().getModel(modelId);
-        Keepsakes.LOGGER.info("Custom model {} found", (customModel != null ? "was" : "was NOT")); // Added log
 
         return customModel != null ? customModel : bakedModel;
     }

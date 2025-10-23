@@ -20,5 +20,6 @@ public abstract class ModelLoaderMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 1))
     private void onInit(CallbackInfo ci) {
         this.loadItemModel(ModelIdentifier.ofInventoryVariant(Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_handheld")));
+        this.loadItemModel(ModelIdentifier.ofInventoryVariant(Identifier.of(Keepsakes.MOD_ID, "hf_murasama_handheld")));
     }
 }
