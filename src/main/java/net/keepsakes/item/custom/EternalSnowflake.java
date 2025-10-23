@@ -170,13 +170,13 @@ public class EternalSnowflake extends AccessoryItem {
 
             Random random = player.getEntityWorld().getRandom();
             if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
-                double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
-                double y = player.getY() + random.nextFloat() * 2.0;
-                double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
+                double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 1;
+                double y = player.getY() + random.nextFloat() * 0.2;
+                double z = player.getZ() + (random.nextFloat() * 2.0 - 1.0) * 1;
 
-                double vx = (random.nextFloat() * 2.0 - 1.0) * 0.01;
-                double vy = random.nextFloat() * 0.05;
-                double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
+                double vx = (random.nextFloat() - 0.5) * 0.3;
+                double vy = random.nextFloat() * 0.02;
+                double vz = (random.nextFloat() - 0.5) * 0.3;
 
                 ((ServerWorld) player.getWorld()).spawnParticles(
                         ParticleTypes.SNOWFLAKE, x, y, z, 1, vx, vy, vz, 0.0

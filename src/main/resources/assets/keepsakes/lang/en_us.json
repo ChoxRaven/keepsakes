@@ -18,5 +18,7 @@
   "item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition": "King Azamoth's Ambition: %s",
   "item.keepsakes.chrysalis_of_eternity.stats_explanation1": "- Increases Attack Speed by 0.2",
   "item.keepsakes.chrysalis_of_eternity.stats_explanation2": "- Increases Damage by by 0.5",
-  "item.keepsakes.chrysalis_of_eternity.stats_explanation3": "- Decreases Armor by 6"
+  "item.keepsakes.chrysalis_of_eternity.stats_explanation3": "- Decreases Armor by 6",
+
+  "item.keepsakes.hf_murasama": "§cHF Murasama"
 }

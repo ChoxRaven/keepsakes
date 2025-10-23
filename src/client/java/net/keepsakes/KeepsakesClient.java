@@ -9,6 +9,9 @@ import net.keepsakes.rendering.AmbitionBillboardFeatureRenderer;
 import net.minecraft.client.particle.EndRodParticle;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 
 public class KeepsakesClient implements ClientModInitializer {
 	@Override

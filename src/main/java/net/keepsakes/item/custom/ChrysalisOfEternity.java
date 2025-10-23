@@ -67,7 +67,7 @@ public class ChrysalisOfEternity extends AccessoryItem {
 
         // * Play sound effect for feedback
         world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                currentState ? SoundEvents.BLOCK_SNOW_BREAK : SoundEvents.BLOCK_GLASS_PLACE,
+                currentState ? SoundEvents.BLOCK_SOUL_SAND_BREAK : SoundEvents.BLOCK_SOUL_SAND_PLACE,
                 SoundCategory.PLAYERS, 2f, currentState ? 0.5f : 1.2f);
 
         // * Send message to player

@@ -3,7 +3,10 @@ package net.keepsakes;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.keepsakes.block.ModBlocks;
+import net.keepsakes.block.entity.ModBlockEntities;
 import net.keepsakes.item.ModItems;
+import net.keepsakes.networking.ModNetworking;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -30,13 +33,11 @@ public class Keepsakes implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		// * Initialize Items
-		LOGGER.info("Loading Items...");
+		ModBlocks.registerBlocks();
+		ModBlockEntities.registerBlockEntities();
 		ModItems.initialize();
-		LOGGER.info("Finished loading items!");
+		ModNetworking.initialize();
 
-        LOGGER.info("Loading Particles...");
-        initializeParticles();
-        LOGGER.info("Finished loading particles!");
+		LOGGER.info("Keepsakes mod initialized successfully!");
 	}
 }
