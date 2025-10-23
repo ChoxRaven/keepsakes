@@ -8,7 +8,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +36,9 @@ public class DematerializedBlockEntity extends BlockEntity {
 
     public static void tick(World world, BlockPos pos, BlockState state, DematerializedBlockEntity blockEntity) {
         if (world.isClient) return;
-
+        ((ServerWorld) blockEntity.getWorld()).spawnParticles(
+                ParticleTypes.SOUL, blockEntity.getPos().getX() + 0.5, blockEntity.getPos().getY() + 0.5, blockEntity.getPos().getZ() + 0.5, 1, 0.25, 0.25, 0.25, 0.0
+        );
         if (blockEntity.originalBlockState != null &&
                 world.getTime() - blockEntity.removalTime >= DURATION_TICKS) {
             // Restore the original block
