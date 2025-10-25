@@ -26,9 +26,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ChrysalisOfEternity extends AccessoryItem {
+public class ChrysalisOfEternityItem extends AccessoryItem {
     // * Item Settings
-    public ChrysalisOfEternity(Settings settings) {
+    public ChrysalisOfEternityItem(Settings settings) {
         super(settings
                 .maxCount(1)
                 .fireproof()

@@ -16,6 +16,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+
 public class DematerializerLogic {
     private static final double MAX_DEMATERIALIZE_DISTANCE = 10.0;
 
@@ -35,6 +40,117 @@ public class DematerializerLogic {
         processDematerialization(world, player, stack);
     }
 
+    public static void handleRightClick(World world, PlayerEntity player, BlockPos targetPos) {
+        Keepsakes.LOGGER.info("SERVER: DematerializerLogic - Processing right click for {} at {}",
+                player.getName().getString(), targetPos);
+
+        if (world.isClient) {
+            return;
+        }
+
+        Keepsakes.LOGGER.info("SERVER: Target block is: {}", world.getBlockState(targetPos).getBlock());
+
+        if (world.getBlockState(targetPos).getBlock() == ModBlocks.DEMATERIALIZED_BLOCK) {
+            Keepsakes.LOGGER.info("SERVER: Reverting dematerialized block at {}", targetPos);
+
+            // Check if block entity exists
+            if (!(world.getBlockEntity(targetPos) instanceof DematerializedBlockEntity)) {
+                Keepsakes.LOGGER.error("SERVER: No DematerializedBlockEntity found at {}", targetPos);
+                world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.5f, 1.5f);
+                return;
+            }
+
+            // Revert this block and all connected dematerialized blocks
+            int revertedCount = revertConnectedBlocks(world, targetPos);
+
+            if (revertedCount > 0) {
+                Keepsakes.LOGGER.info("SERVER: Successfully reverted {} dematerialized blocks", revertedCount);
+
+                // Play success sound
+                world.playSound(null, targetPos,
+                        SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME,
+                        SoundCategory.BLOCKS, 1.0f, 1.0f);
+            } else {
+                Keepsakes.LOGGER.error("SERVER: Failed to revert any blocks");
+                world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS, 0.5f, 0.5f);
+            }
+        } else {
+            Keepsakes.LOGGER.info("SERVER: Targeted block is not dematerialized: {}", world.getBlockState(targetPos).getBlock());
+            world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.BLOCK_NOTE_BLOCK_HAT, SoundCategory.PLAYERS, 0.5f, 1.5f);
+        }
+    }
+
+    private static int revertConnectedBlocks(World world, BlockPos startPos) {
+        Set<BlockPos> visited = new HashSet<>();
+        Queue<BlockPos> queue = new LinkedList<>();
+        int revertedCount = 0;
+
+        // Start with the clicked block
+        queue.add(startPos);
+        visited.add(startPos);
+
+        // Use BFS to find all connected dematerialized blocks
+        while (!queue.isEmpty() && revertedCount < 1000) {
+            BlockPos currentPos = queue.poll();
+
+            // Revert this block using the block entity's restoration function
+            if (revertSingleBlock(world, currentPos)) {
+                revertedCount++;
+            } else {
+                Keepsakes.LOGGER.warn("SERVER: Failed to revert block at {}", currentPos);
+            }
+
+            // Check all 6 adjacent positions
+            for (BlockPos neighborPos : getNeighbors(currentPos)) {
+                if (!visited.contains(neighborPos) &&
+                        world.getBlockState(neighborPos).getBlock() == ModBlocks.DEMATERIALIZED_BLOCK) {
+                    queue.add(neighborPos);
+                    visited.add(neighborPos);
+                    Keepsakes.LOGGER.debug("SERVER: Added neighbor at {} to queue", neighborPos);
+                }
+            }
+        }
+
+        return revertedCount;
+    }
+
+    private static BlockPos[] getNeighbors(BlockPos pos) {
+        return new BlockPos[]{
+                pos.up(),
+                pos.down(),
+                pos.north(),
+                pos.south(),
+                pos.east(),
+                pos.west()
+        };
+    }
+
+    private static boolean revertSingleBlock(World world, BlockPos pos) {
+        try {
+            Keepsakes.LOGGER.debug("SERVER: Attempting to revert block at {}", pos);
+
+            if (world.getBlockEntity(pos) instanceof DematerializedBlockEntity blockEntity) {
+                // Use the block entity's dedicated restoration function
+                boolean success = blockEntity.restoreOriginalBlock();
+                if (success) {
+                    Keepsakes.LOGGER.debug("SERVER: Successfully reverted block at {}", pos);
+                } else {
+                    Keepsakes.LOGGER.error("SERVER: Block entity restoration failed at {}", pos);
+                }
+                return success;
+            } else {
+                Keepsakes.LOGGER.error("SERVER: No block entity found at {}", pos);
+            }
+        } catch (Exception e) {
+            Keepsakes.LOGGER.error("SERVER: Error reverting block at {}", pos, e);
+        }
+
+        return false;
+    }
+
     private static void processDematerialization(World world, PlayerEntity player, ItemStack stack) {
         Keepsakes.LOGGER.info("SERVER: Processing dematerialization logic");
 
@@ -49,62 +165,126 @@ public class DematerializerLogic {
 
             Keepsakes.LOGGER.info("SERVER: Targeting block at {} on side {}", targetPos, side);
 
-            // Get the original block state
-            BlockState originalState = world.getBlockState(targetPos);
-            Block originalBlock = originalState.getBlock();
+            // Get all surface blocks in 3x3 area
+            Set<BlockPos> surfaceBlocks = getSurfaceBlocks(world, targetPos, side);
 
-            // Skip if it's air, our temporary block, or unbreakable
-            if (originalState.isAir() ||
-                    originalBlock == ModBlocks.DEMATERIALIZED_BLOCK ||
-                    originalState.getHardness(world, targetPos) < 0) {
-                Keepsakes.LOGGER.info("SERVER: Cannot dematerialize this block type");
+            if (surfaceBlocks.isEmpty()) {
+                Keepsakes.LOGGER.info("SERVER: No valid surface blocks found");
                 world.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.5f, 1.5f);
                 return;
             }
 
-            // Check if block is within reach distance
-            if (!isWithinReach(player, targetPos, MAX_DEMATERIALIZE_DISTANCE)) {
-                Keepsakes.LOGGER.info("SERVER: Block is too far away");
-                world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS, 0.5f, 0.5f);
-                return;
+            int successCount = 0;
+
+            // Process each surface block
+            for (BlockPos pos : surfaceBlocks) {
+                if (dematerializeSingleBlock(world, player, pos)) {
+                    successCount++;
+                }
             }
 
-            try {
-                // Store the original block data before replacement
-                Keepsakes.LOGGER.info("SERVER: Dematerializing block {} at {}",
-                        Block.getRawIdFromState(originalState), targetPos);
-
-                // Replace with our temporary block
-                world.setBlockState(targetPos, ModBlocks.DEMATERIALIZED_BLOCK.getDefaultState());
-
-                // Set the original block data in the block entity
-                if (world.getBlockEntity(targetPos) instanceof DematerializedBlockEntity blockEntity) {
-                    blockEntity.setOriginalBlockState(originalState);
-                    Keepsakes.LOGGER.info("SERVER: Successfully stored original block data");
-
-                    // Play success sound at the block location
-                    world.playSound(null, targetPos,
-                            SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK,
-                            SoundCategory.BLOCKS, 0.8f, 1.2f);
-
-                } else {
-                    Keepsakes.LOGGER.error("SERVER: Failed to get block entity after replacement!");
-                    // Restore the original block if we failed
-                    world.setBlockState(targetPos, originalState);
-                }
-
-            } catch (Exception e) {
-                Keepsakes.LOGGER.error("SERVER: Error during dematerialization", e);
-                // Try to restore the original block on error
-                world.setBlockState(targetPos, originalState);
+            if (successCount > 0) {
+                Keepsakes.LOGGER.info("SERVER: Successfully dematerialized {} blocks", successCount);
+                // Play success sound at the center location
+                world.playSound(null, targetPos,
+                        SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK,
+                        SoundCategory.BLOCKS, 1.0f, 1.2f);
+            } else {
+                Keepsakes.LOGGER.info("SERVER: No blocks could be dematerialized");
+                world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS, 0.5f, 0.5f);
             }
 
         } else {
             Keepsakes.LOGGER.info("SERVER: No block targeted - looking at air or entity");
             world.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.BLOCK_NOTE_BLOCK_HAT, SoundCategory.PLAYERS, 0.5f, 1.5f);
+        }
+    }
+
+    private static Set<BlockPos> getSurfaceBlocks(World world, BlockPos centerPos, Direction face) {
+        Set<BlockPos> surfaceBlocks = new HashSet<>();
+
+        // Get the two perpendicular directions to form our 3x3 grid
+        Direction[] perpendicularDirs = getPerpendicularDirections(face);
+
+        // Generate 3x3 grid in the plane of the face
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                BlockPos surfacePos = centerPos
+                        .offset(perpendicularDirs[0], i)
+                        .offset(perpendicularDirs[1], j);
+
+                // Simplified: just check if the block itself is valid and the space in front is empty
+                if (isValidSurfaceBlock(world.getBlockState(surfacePos)) &&
+                        isSpaceEmpty(world, surfacePos, face)) {
+                    surfaceBlocks.add(surfacePos);
+                }
+            }
+        }
+
+        return surfaceBlocks;
+    }
+
+    private static Direction[] getPerpendicularDirections(Direction face) {
+        return switch (face) {
+            case UP, DOWN -> new Direction[]{Direction.NORTH, Direction.EAST};
+            case NORTH, SOUTH -> new Direction[]{Direction.UP, Direction.EAST};
+            case EAST, WEST -> new Direction[]{Direction.UP, Direction.NORTH};
+        };
+    }
+
+    private static boolean isSpaceEmpty(World world, BlockPos pos, Direction face) {
+        BlockPos inFront = pos.offset(face);
+        BlockState inFrontState = world.getBlockState(inFront);
+        return inFrontState.isAir() || inFrontState.isReplaceable();
+    }
+
+    private static boolean isValidSurfaceBlock(BlockState state) {
+        return !state.isAir() &&
+                state.getBlock() != ModBlocks.DEMATERIALIZED_BLOCK &&
+                state.getHardness(null, null) >= 0; // Not unbreakable
+    }
+
+    private static boolean dematerializeSingleBlock(World world, PlayerEntity player, BlockPos pos) {
+        try {
+            BlockState originalState = world.getBlockState(pos);
+            Block originalBlock = originalState.getBlock();
+
+            // Skip if it's air, our temporary block, or unbreakable
+            if (originalState.isAir() ||
+                    originalBlock == ModBlocks.DEMATERIALIZED_BLOCK ||
+                    originalState.getHardness(world, pos) < 0) {
+                return false;
+            }
+
+            // Check if block is within reach distance
+            if (!isWithinReach(player, pos, MAX_DEMATERIALIZE_DISTANCE)) {
+                return false;
+            }
+
+            // Store the original block data before replacement
+            Keepsakes.LOGGER.debug("SERVER: Dematerializing block {} at {}",
+                    Block.getRawIdFromState(originalState), pos);
+
+            // Replace with our temporary block
+            world.setBlockState(pos, ModBlocks.DEMATERIALIZED_BLOCK.getDefaultState());
+
+            // Set the original block data in the block entity
+            if (world.getBlockEntity(pos) instanceof DematerializedBlockEntity blockEntity) {
+                blockEntity.setOriginalBlockState(originalState);
+                return true;
+            } else {
+                Keepsakes.LOGGER.error("SERVER: Failed to get block entity after replacement at {}!", pos);
+                // Restore the original block if we failed
+                world.setBlockState(pos, originalState);
+                return false;
+            }
+
+        } catch (Exception e) {
+            Keepsakes.LOGGER.error("SERVER: Error dematerializing block at {}", pos, e);
+            return false;
         }
     }
 

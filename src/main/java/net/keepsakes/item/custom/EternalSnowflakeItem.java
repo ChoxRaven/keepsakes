@@ -24,9 +24,9 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import java.util.List;
 
-public class EternalSnowflake extends AccessoryItem {
+public class EternalSnowflakeItem extends AccessoryItem {
     // * Item Settings
-    public EternalSnowflake(Settings settings) {
+    public EternalSnowflakeItem(Settings settings) {
         super(settings
                 .maxCount(1)
                 .fireproof()

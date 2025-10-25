@@ -6,30 +6,21 @@ import net.keepsakes.Keepsakes;
 import net.keepsakes.item.ModItems;
 import net.keepsakes.item.logic.DematerializerLogic;
 import net.keepsakes.networking.packet.DematerializerLeftClickPayload;
+import net.keepsakes.networking.packet.DematerializerRightClickPayload;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ModNetworking {
-
-    /**
-     * Registers all custom payloads for client-to-server communication
-     */
     public static void registerC2SPayloads() {
-        PayloadTypeRegistry.playC2S().register(
-                DematerializerLeftClickPayload.ID,
-                DematerializerLeftClickPayload.CODEC
-        );
+        DematerializerLeftClickPayload.register();
+        DematerializerRightClickPayload.register();
     }
 
-    /**
-     * Registers all custom payloads for server-to-client communication
-     */
     public static void registerS2CPayloads() {
         // Register server-to-client payloads here when needed
     }
 
-    /**
-     * Registers all packet receivers on the server side
-     */
     public static void registerServerReceivers() {
         // Dematerializer left-click handler
         ServerPlayNetworking.registerGlobalReceiver(
@@ -49,7 +40,19 @@ public class ModNetworking {
                 }
         );
 
-        // Register more receivers here as needed
+        // Dematerializer right-click handler
+        ServerPlayNetworking.registerGlobalReceiver(
+                DematerializerRightClickPayload.ID,
+                (payload, context) -> {
+                    ServerPlayerEntity player = context.player();
+                    Keepsakes.LOGGER.info("SERVER: Received right-click packet for position {}", payload.targetPos());
+                    Keepsakes.LOGGER.info("SERVER: Player position: {}", player.getBlockPos());
+
+                    BlockState targetState = player.getWorld().getBlockState(payload.targetPos());
+                    Keepsakes.LOGGER.info("SERVER: Block at target position: {}", targetState.getBlock());
+
+                    DematerializerLogic.handleRightClick(player.getWorld(), player, payload.targetPos());
+                });
     }
 
     // Initialize all networking components

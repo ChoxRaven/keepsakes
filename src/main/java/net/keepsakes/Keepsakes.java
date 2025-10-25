@@ -33,10 +33,11 @@ public class Keepsakes implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
+		ModNetworking.initialize();
+
 		ModBlocks.registerBlocks();
 		ModBlockEntities.registerBlockEntities();
 		ModItems.initialize();
-		ModNetworking.initialize();
 
 		LOGGER.info("Keepsakes mod initialized successfully!");
 	}

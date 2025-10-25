@@ -1,5 +1,6 @@
 package net.keepsakes.networking.packet;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -15,5 +16,10 @@ public record DematerializerLeftClickPayload() implements CustomPayload {
     @Override
     public Id<? extends CustomPayload> getId() {
         return ID;
+    }
+
+    // Static method to register this payload type
+    public static void register() {
+        PayloadTypeRegistry.playC2S().register(ID, CODEC);
     }
 }

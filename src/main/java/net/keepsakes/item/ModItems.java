@@ -1,11 +1,7 @@
 package net.keepsakes.item;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.custom.ChrysalisOfEternity;
-import net.keepsakes.item.custom.EternalSnowflake;
-import net.keepsakes.item.custom.HFMurasama;
-import net.keepsakes.item.custom.HarvestersScythe;
-import net.keepsakes.material.custom.CarbonSteelMaterial;
+import net.keepsakes.item.custom.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.registry.Registries;
@@ -26,21 +22,21 @@ public class ModItems {
     // ? Miera's
     // Such a fridge type item
     public static final Item ETERNAL_SNOWFLAKE = register(
-            new EternalSnowflake(new Item.Settings()),
+            new EternalSnowflakeItem(new Item.Settings()),
             "eternal_snowflake"
     );
 
     // ? Ordovis's
     // Lets dance!
     public static final Item HF_MURASAMA = register(
-            new HFMurasama(ToolMaterials.NETHERITE, new Item.Settings()),
+            new HFMurasamaItem(ToolMaterials.NETHERITE, new Item.Settings()),
             "hf_murasama"
     );
 
     // ? Chox's
     // Bandit + Scythe
     public static final Item HARVESTERS_SCYTHE = register(
-            new HarvestersScythe(ToolMaterials.NETHERITE, new Item.Settings()),
+            new HarvestersScytheItem(ToolMaterials.NETHERITE, new Item.Settings()),
             "harvesters_scythe"
     );
 
@@ -58,14 +54,14 @@ public class ModItems {
 
     // The finales
     public static final Item DEMATERIALIZER = register(
-            new Item(new Item.Settings()),
+            new DematerializerItem(new Item.Settings()),
             "dematerializer"
     );
 
     // ? Star's
     // LEAN
     public static final Item CHRYSALIS_OF_ETERNITY = register(
-            new ChrysalisOfEternity(new Item.Settings()),
+            new ChrysalisOfEternityItem(new Item.Settings()),
             "chrysalis_of_eternity"
     );
 
