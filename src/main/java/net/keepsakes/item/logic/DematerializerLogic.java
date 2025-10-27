@@ -25,8 +25,6 @@ public class DematerializerLogic {
     private static final double MAX_DEMATERIALIZE_DISTANCE = 10.0;
 
     public static void handleLeftClick(World world, PlayerEntity player, ItemStack stack) {
-        Keepsakes.LOGGER.info("SERVER: DematerializerLogic - Processing left click for {}", player.getName().getString());
-
         if (world.isClient) {
             return;
         }
@@ -41,21 +39,14 @@ public class DematerializerLogic {
     }
 
     public static void handleRightClick(World world, PlayerEntity player, BlockPos targetPos) {
-        Keepsakes.LOGGER.info("SERVER: DematerializerLogic - Processing right click for {} at {}",
-                player.getName().getString(), targetPos);
-
         if (world.isClient) {
             return;
         }
 
-        Keepsakes.LOGGER.info("SERVER: Target block is: {}", world.getBlockState(targetPos).getBlock());
-
         if (world.getBlockState(targetPos).getBlock() == ModBlocks.DEMATERIALIZED_BLOCK) {
-            Keepsakes.LOGGER.info("SERVER: Reverting dematerialized block at {}", targetPos);
 
             // Check if block entity exists
             if (!(world.getBlockEntity(targetPos) instanceof DematerializedBlockEntity)) {
-                Keepsakes.LOGGER.error("SERVER: No DematerializedBlockEntity found at {}", targetPos);
                 world.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.5f, 1.5f);
                 return;
@@ -65,19 +56,17 @@ public class DematerializerLogic {
             int revertedCount = revertConnectedBlocks(world, targetPos);
 
             if (revertedCount > 0) {
-                Keepsakes.LOGGER.info("SERVER: Successfully reverted {} dematerialized blocks", revertedCount);
 
                 // Play success sound
                 world.playSound(null, targetPos,
                         SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME,
                         SoundCategory.BLOCKS, 1.0f, 1.0f);
             } else {
-                Keepsakes.LOGGER.error("SERVER: Failed to revert any blocks");
+                // Play failure sound
                 world.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS, 0.5f, 0.5f);
             }
         } else {
-            Keepsakes.LOGGER.info("SERVER: Targeted block is not dematerialized: {}", world.getBlockState(targetPos).getBlock());
             world.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.BLOCK_NOTE_BLOCK_HAT, SoundCategory.PLAYERS, 0.5f, 1.5f);
         }
@@ -100,7 +89,6 @@ public class DematerializerLogic {
             if (revertSingleBlock(world, currentPos)) {
                 revertedCount++;
             } else {
-                Keepsakes.LOGGER.warn("SERVER: Failed to revert block at {}", currentPos);
             }
 
             // Check all 6 adjacent positions
@@ -109,7 +97,6 @@ public class DematerializerLogic {
                         world.getBlockState(neighborPos).getBlock() == ModBlocks.DEMATERIALIZED_BLOCK) {
                     queue.add(neighborPos);
                     visited.add(neighborPos);
-                    Keepsakes.LOGGER.debug("SERVER: Added neighbor at {} to queue", neighborPos);
                 }
             }
         }
@@ -130,17 +117,10 @@ public class DematerializerLogic {
 
     private static boolean revertSingleBlock(World world, BlockPos pos) {
         try {
-            Keepsakes.LOGGER.debug("SERVER: Attempting to revert block at {}", pos);
 
             if (world.getBlockEntity(pos) instanceof DematerializedBlockEntity blockEntity) {
                 // Use the block entity's dedicated restoration function
-                boolean success = blockEntity.restoreOriginalBlock();
-                if (success) {
-                    Keepsakes.LOGGER.debug("SERVER: Successfully reverted block at {}", pos);
-                } else {
-                    Keepsakes.LOGGER.error("SERVER: Block entity restoration failed at {}", pos);
-                }
-                return success;
+                return blockEntity.restoreOriginalBlock();
             } else {
                 Keepsakes.LOGGER.error("SERVER: No block entity found at {}", pos);
             }
@@ -152,9 +132,6 @@ public class DematerializerLogic {
     }
 
     private static void processDematerialization(World world, PlayerEntity player, ItemStack stack) {
-        Keepsakes.LOGGER.info("SERVER: Processing dematerialization logic");
-
-        // Perform raycast to find the targeted block
         HitResult hitResult = raycast(world, player, false);
 
         // Check if it's a block hit and cast to BlockHitResult
@@ -163,13 +140,10 @@ public class DematerializerLogic {
             BlockPos targetPos = blockHitResult.getBlockPos();
             Direction side = blockHitResult.getSide();
 
-            Keepsakes.LOGGER.info("SERVER: Targeting block at {} on side {}", targetPos, side);
-
             // Get all surface blocks in 3x3 area
             Set<BlockPos> surfaceBlocks = getSurfaceBlocks(world, targetPos, side);
 
             if (surfaceBlocks.isEmpty()) {
-                Keepsakes.LOGGER.info("SERVER: No valid surface blocks found");
                 world.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.5f, 1.5f);
                 return;
@@ -185,19 +159,16 @@ public class DematerializerLogic {
             }
 
             if (successCount > 0) {
-                Keepsakes.LOGGER.info("SERVER: Successfully dematerialized {} blocks", successCount);
                 // Play success sound at the center location
                 world.playSound(null, targetPos,
                         SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK,
                         SoundCategory.BLOCKS, 1.0f, 1.2f);
             } else {
-                Keepsakes.LOGGER.info("SERVER: No blocks could be dematerialized");
                 world.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.PLAYERS, 0.5f, 0.5f);
             }
 
         } else {
-            Keepsakes.LOGGER.info("SERVER: No block targeted - looking at air or entity");
             world.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.BLOCK_NOTE_BLOCK_HAT, SoundCategory.PLAYERS, 0.5f, 1.5f);
         }
@@ -263,10 +234,6 @@ public class DematerializerLogic {
             if (!isWithinReach(player, pos, MAX_DEMATERIALIZE_DISTANCE)) {
                 return false;
             }
-
-            // Store the original block data before replacement
-            Keepsakes.LOGGER.debug("SERVER: Dematerializing block {} at {}",
-                    Block.getRawIdFromState(originalState), pos);
 
             // Replace with our temporary block
             world.setBlockState(pos, ModBlocks.DEMATERIALIZED_BLOCK.getDefaultState());

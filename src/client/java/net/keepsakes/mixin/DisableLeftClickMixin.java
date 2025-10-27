@@ -39,7 +39,6 @@ public class DisableLeftClickMixin {
             ItemStack mainHandStack = player.getMainHandStack();
             if (!mainHandStack.isEmpty() && DISABLED_LEFT_CLICK_ITEMS.contains(mainHandStack.getItem())) {
                 // Calls the custom function on the Dematerializer
-                Keepsakes.LOGGER.info("CLIENT: Sending DematerializerLeftClickPayload");
                 ClientPlayNetworking.send(new DematerializerLeftClickPayload());
 
                 cir.setReturnValue(false); // Cancel the attack
