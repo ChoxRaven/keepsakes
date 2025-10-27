@@ -40,6 +40,14 @@ public class DematerializedBlockEntity extends BlockEntity {
         return this.originalBlockState;
     }
 
+    public long getCreationTime() {
+        return this.creationTime;
+    }
+
+    public static long getDurationTicks() {
+        return DURATION_TICKS;
+    }
+
     public boolean restoreOriginalBlock() {
         if (world == null || world.isClient || originalBlockState == null) {
             return false;
