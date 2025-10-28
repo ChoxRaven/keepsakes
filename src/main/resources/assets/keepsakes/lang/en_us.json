@@ -20,5 +20,7 @@
   "item.keepsakes.chrysalis_of_eternity.stats_explanation2": "- Increases Damage by by 0.5",
   "item.keepsakes.chrysalis_of_eternity.stats_explanation3": "- Decreases Armor by 6",
 
-  "item.keepsakes.hf_murasama": "§cHF Murasama"
+  "item.keepsakes.hf_murasama": "§cHF Murasama",
+
+  "item.keepsakes.dematerializer": "<glitch>Dematerializer</glitch>"
 }
