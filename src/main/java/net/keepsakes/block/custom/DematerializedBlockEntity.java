@@ -13,6 +13,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,10 +74,14 @@ public class DematerializedBlockEntity extends BlockEntity {
         if (world.isClient) return;
 
         // Spawn particles
-        ((ServerWorld) world).spawnParticles(
-                ParticleTypes.SOUL, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                1, 0.25, 0.25, 0.25, 0.0
-        );
+        Random random = blockEntity.getWorld().getRandom();
+
+        if (random.nextFloat() < 0.8f) {
+            ((ServerWorld) world).spawnParticles(
+                    ParticleTypes.SOUL, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    1, 0.25, 0.25, 0.25, 0.0
+            );
+        }
 
         // Restore after 15s
         if (blockEntity.shouldAutoRestore()) {

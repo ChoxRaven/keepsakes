@@ -18,7 +18,7 @@ public class HarvestersScytheItem extends SwordItem {
         super(toolMaterial, settings
                 .maxCount(1)
                 .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true))
-                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 3, -3.0f))
+                .attributeModifiers(SwordItem.createAttributeModifiers(toolMaterial, 2, -3.5f))
                 .fireproof()
         );
     }
@@ -27,6 +27,7 @@ public class HarvestersScytheItem extends SwordItem {
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.tooltip").formatted(Formatting.DARK_GRAY));
         tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.explanation1").formatted(Formatting.GREEN));
+        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.explanation2").formatted(Formatting.GREEN));
     }
 
     @Override

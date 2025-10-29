@@ -58,6 +58,13 @@ public class ModItems {
             "dematerializer"
     );
 
+    // ? Nidzulaa's
+    // The finales pt. 2
+    public static final Item DATA_RESHAPER = register(
+            new Item(new Item.Settings()),
+            "data_reshaper"
+    );
+
     // ? Star's
     // LEAN
     public static final Item CHRYSALIS_OF_ETERNITY = register(
