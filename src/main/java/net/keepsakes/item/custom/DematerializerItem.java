@@ -1,19 +1,26 @@
 package net.keepsakes.item.custom;
 
 import net.keepsakes.Keepsakes;
+import net.keepsakes.item.CustomPrimaryUseItem;
+import net.keepsakes.networking.packet.DematerializerLeftClickPayload;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 
-public class DematerializerItem extends Item {
+public class DematerializerItem extends Item implements CustomPrimaryUseItem {
     public DematerializerItem(Settings settings) {
         super(settings.maxCount(1).fireproof());
     }
 
+    @Override
+    public CustomPayload getPrimaryUsePayload() {
+        return new DematerializerLeftClickPayload();
+    }
 
     @Override
     public UseAction getUseAction(ItemStack stack) {

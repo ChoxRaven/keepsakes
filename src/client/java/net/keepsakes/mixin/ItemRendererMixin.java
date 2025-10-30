@@ -37,7 +37,7 @@ public class ItemRendererMixin {
     }
 
     @Unique
-    private BakedModel getCustomModel(BakedModel bakedModel, ItemStack stack, String modelPath) {
+    private BakedModel keepsakes$getCustomModel(BakedModel bakedModel, ItemStack stack, String modelPath) {
         if (modelPath == null) {
             return bakedModel;
         }
@@ -56,14 +56,14 @@ public class ItemRendererMixin {
             at = @At(value = "HEAD"),
             argsOnly = true
     )
-    public BakedModel renderItem(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ModelTransformationMode renderMode) {
+    public BakedModel keepsakes$renderItem(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) ModelTransformationMode renderMode) {
         if (renderMode == ModelTransformationMode.GUI
                 || renderMode == ModelTransformationMode.GROUND
                 || renderMode == ModelTransformationMode.FIXED) {
 
             String modelPath = ITEM_MODELS.get(stack.getItem());
             if (modelPath != null) {
-                return getCustomModel(bakedModel, stack, modelPath);
+                return keepsakes$getCustomModel(bakedModel, stack, modelPath);
             }
         }
 
@@ -75,10 +75,10 @@ public class ItemRendererMixin {
             at = @At(value = "STORE"),
             ordinal = 1
     )
-    public BakedModel getHeldItemModelMixin(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack) {
+    public BakedModel keepsakes$getHeldItemModel(BakedModel bakedModel, @Local(argsOnly = true) ItemStack stack) {
         String modelPath = HANDHELD_MODELS.get(stack.getItem());
         if (modelPath != null) {
-            return getCustomModel(bakedModel, stack, modelPath);
+            return keepsakes$getCustomModel(bakedModel, stack, modelPath);
         }
 
         return bakedModel;

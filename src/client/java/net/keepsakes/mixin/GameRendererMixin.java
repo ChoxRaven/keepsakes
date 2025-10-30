@@ -24,43 +24,42 @@ import java.util.Set;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
     @Unique
-    private static final Set<Block> CUTTHROUGH$ALLOWED_BLOCKS = new HashSet<>();
+    private static final Set<Block> KEEPSAKES$ALLOWED_BLOCKS = new HashSet<>();
 
     @Unique
-    private static boolean cutthrough$blocksInitialized = false;
+    private static boolean keepsakes$blocksInitialized = false;
 
     @Unique
-    private static void cutthrough$initializeAllowedBlocks() {
-        if (cutthrough$blocksInitialized) return;
+    private static void keepsakes$initializeAllowedBlocks() {
+        if (keepsakes$blocksInitialized) return;
 
-        CUTTHROUGH$ALLOWED_BLOCKS.add(ModBlocks.DEMATERIALIZED_BLOCK);
+        KEEPSAKES$ALLOWED_BLOCKS.add(ModBlocks.DEMATERIALIZED_BLOCK);
 
-        cutthrough$blocksInitialized = true;
+        keepsakes$blocksInitialized = true;
     }
 
     @Unique
-    private static boolean cutthrough$isBlockAllowed(HitResult hitResult, Entity entity) {
+    private static boolean keepsakes$isBlockAllowed(HitResult hitResult, Entity entity) {
         if (hitResult.getType() != HitResult.Type.BLOCK) return false;
 
-        if (!cutthrough$blocksInitialized) {
-            cutthrough$initializeAllowedBlocks();
+        if (!keepsakes$blocksInitialized) {
+            keepsakes$initializeAllowedBlocks();
         }
 
         BlockHitResult blockHit = (BlockHitResult) hitResult;
         Block block = entity.getWorld().getBlockState(blockHit.getBlockPos()).getBlock();
 
-        return CUTTHROUGH$ALLOWED_BLOCKS.contains(block);
+        return KEEPSAKES$ALLOWED_BLOCKS.contains(block);
     }
 
     @ModifyVariable(
-            method = "findCrosshairTarget", // This might be called "pick" in some mappings - adjust if needed
+            method = "findCrosshairTarget",
             at = @At(value = "STORE")
     )
     private HitResult pick$0(HitResult hitResult, Entity entity, double blockInteractionRange, double entityInteractionRange, float partialTick,
                              @Share("originalHitResult") LocalRef<HitResult> originalHitResult) {
 
-        // Only run custom pick logic if we hit an allowed block or no block at all
-        if (hitResult.getType() != HitResult.Type.BLOCK || cutthrough$isBlockAllowed(hitResult, entity)) {
+        if (hitResult.getType() != HitResult.Type.BLOCK || keepsakes$isBlockAllowed(hitResult, entity)) {
             double pickRange = Math.max(blockInteractionRange, entityInteractionRange);
             HitResult newHitResult = GameRendererPickHelper.pick(entity, pickRange, partialTick);
             Vec3d eyePosition = entity.getEyePos();
@@ -76,14 +75,14 @@ public abstract class GameRendererMixin {
     }
 
     @ModifyReturnValue(
-            method = "findCrosshairTarget", // This might be called "pick" in some mappings - adjust if needed
+            method = "findCrosshairTarget",
             at = @At("TAIL")
     )
     private HitResult pick$1(HitResult hitResult, Entity entity, double blockInteractionRange, double entityInteractionRange, float partialTick,
                              @Share("originalHitResult") LocalRef<HitResult> originalHitResult) {
 
         if (originalHitResult.get() != null && hitResult.getType() != HitResult.Type.ENTITY) {
-            if (cutthrough$isBlockAllowed(originalHitResult.get(), entity)) {
+            if (keepsakes$isBlockAllowed(originalHitResult.get(), entity)) {
                 Vec3d eyePosition = entity.getEyePos();
                 if (originalHitResult.get().getPos().squaredDistanceTo(eyePosition) <
                         hitResult.getPos().squaredDistanceTo(eyePosition)) {

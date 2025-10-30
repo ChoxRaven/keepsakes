@@ -1,13 +1,14 @@
 package net.keepsakes.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.keepsakes.Keepsakes;
+import net.keepsakes.item.CustomPrimaryUseItem;
 import net.keepsakes.item.ModItems;
 import net.keepsakes.networking.packet.DematerializerLeftClickPayload;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.CustomPayload;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,39 +21,41 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(MinecraftClient.class)
-public class DisableLeftClickMixin {
+public class ClientPlayerEntityMixin {
     @Shadow
     public ClientPlayerEntity player;
 
-    @Unique
-    private static final Set<Item> DISABLED_LEFT_CLICK_ITEMS = new HashSet<>();
-
-    static {
-        // Register items that should have left click disabled
-        DISABLED_LEFT_CLICK_ITEMS.add(ModItems.DEMATERIALIZER);
-    }
-
     // Intercept attack (left-click on entity or air)
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
-    private void onDoAttack(CallbackInfoReturnable<Boolean> cir) {
+    private void keepsakes$cancelAttacking(CallbackInfoReturnable<Boolean> cir) {
         if (player != null) {
             ItemStack mainHandStack = player.getMainHandStack();
-            if (!mainHandStack.isEmpty() && DISABLED_LEFT_CLICK_ITEMS.contains(mainHandStack.getItem())) {
-                // Calls the custom function on the Dematerializer
-                ClientPlayNetworking.send(new DematerializerLeftClickPayload());
+            if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
+                CustomPayload payload = customPrimaryUseItem.getPrimaryUsePayload();
+                boolean shouldCancelEntityAttacking = customPrimaryUseItem.shouldCancelEntityAttacking();
 
-                cir.setReturnValue(false); // Cancel the attack
+                if (payload != null) {
+                    ClientPlayNetworking.send(payload);
+                }
+
+                if (shouldCancelEntityAttacking) {
+                    cir.setReturnValue(false); // Cancel the attack
+                }
             }
         }
     }
 
     // Intercept block breaking (left-click on block)
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
-    private void onHandleBlockBreaking(boolean breaking, CallbackInfo ci) {
+    private void keepsakes$cancelBlockBreaking(boolean breaking, CallbackInfo ci) {
         if (breaking && player != null) {
             ItemStack mainHandStack = player.getMainHandStack();
-            if (!mainHandStack.isEmpty() && DISABLED_LEFT_CLICK_ITEMS.contains(mainHandStack.getItem())) {
-                ci.cancel(); // Cancel block breaking
+            if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
+                boolean shouldCancelBlockBreaking = customPrimaryUseItem.shouldCancelBlockBreaking();
+
+                if (shouldCancelBlockBreaking) {
+                    ci.cancel(); // Cancel block breaking
+                }
             }
         }
     }
