@@ -1,0 +1,7 @@
+{
+  "item.harvesters_scythe.critical": {
+    "sounds": [
+      "keepsakes:item/harvesters_scythe_critical"
+    ]
+  }
+}

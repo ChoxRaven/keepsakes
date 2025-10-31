@@ -5,7 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.keepsakes.block.ModBlocks;
 import net.keepsakes.block.entity.ModBlockEntities;
-import net.keepsakes.item.ModItems;
+import net.keepsakes.index.*;
 import net.keepsakes.networking.ModNetworking;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.Registries;
@@ -17,9 +17,6 @@ import org.slf4j.LoggerFactory;
 public class Keepsakes implements ModInitializer {
 	public static final String MOD_ID = "keepsakes";
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static final SimpleParticleType AMBITION_HALO_PARTICLE = FabricParticleTypes.simple();
@@ -37,6 +34,7 @@ public class Keepsakes implements ModInitializer {
 
 		ModBlocks.registerBlocks();
 		ModBlockEntities.registerBlockEntities();
+		ModSounds.initialize();
 		ModItems.initialize();
 
 		LOGGER.info("Keepsakes mod initialized successfully!");

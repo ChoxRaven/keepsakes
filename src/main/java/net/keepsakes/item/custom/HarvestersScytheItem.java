@@ -1,33 +1,29 @@
 package net.keepsakes.item.custom;
 
-import com.google.common.collect.Multimap;
-import com.mojang.datafixers.kinds.IdF;
 import net.keepsakes.Keepsakes;
+import net.keepsakes.index.ModSounds;
+import net.keepsakes.item.CustomCriticalHitItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.UnbreakableComponent;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
-import java.util.UUID;
 
-public class HarvestersScytheItem extends SwordItem {
-    private static final Identifier ENTITY_REACH_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_reach_modifier");
+public class HarvestersScytheItem extends SwordItem implements CustomCriticalHitItem {
+    private static final Identifier ENTITY_REACH_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_reach_modifier");
 
     public HarvestersScytheItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings
@@ -37,8 +33,6 @@ public class HarvestersScytheItem extends SwordItem {
                 .fireproof()
         );
     }
-    
-    
 
     private static AttributeModifiersComponent createHarvestersScytheModifiers(ToolMaterial toolMaterial) {
         AttributeModifiersComponent.Builder builder = AttributeModifiersComponent.builder();
@@ -63,11 +57,10 @@ public class HarvestersScytheItem extends SwordItem {
                 AttributeModifierSlot.MAINHAND
         );
 
-        // Add reach modifier
         builder.add(
                 EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE,
                 new EntityAttributeModifier(
-                        ENTITY_REACH_ID,
+                        ENTITY_REACH_MODIFIER_ID,
                         0.5,
                         EntityAttributeModifier.Operation.ADD_VALUE
                 ),
@@ -84,13 +77,12 @@ public class HarvestersScytheItem extends SwordItem {
     }
 
     @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof PlayerEntity) {
-            float damageDealt = target.getMaxHealth() - target.getHealth();
-            float healingAmount = damageDealt * 0.15f;
+    public void postCrit(ItemStack stack, LivingEntity target,  PlayerEntity attacker) {
+        float damageDealt = target.getMaxHealth() - target.getHealth();
+        float healingAmount = damageDealt * 0.15f;
 
-            attacker.heal(healingAmount);
-        }
-        return true;
+        attacker.getWorld().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), ModSounds.HARVESTERS_SCYTHE_CRITICAL, attacker.getSoundCategory(), 1.0f, 1.0f);
+
+        attacker.heal(healingAmount);
     }
 }

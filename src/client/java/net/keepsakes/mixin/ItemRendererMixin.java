@@ -2,7 +2,7 @@ package net.keepsakes.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.ModItems;
+import net.keepsakes.index.ModItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;

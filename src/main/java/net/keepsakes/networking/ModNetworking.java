@@ -1,9 +1,8 @@
 package net.keepsakes.networking;
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.ModItems;
+import net.keepsakes.index.ModItems;
 import net.keepsakes.item.logic.DematerializerLogic;
 import net.keepsakes.networking.packet.DematerializerLeftClickPayload;
 import net.keepsakes.networking.packet.DematerializerRightClickPayload;

@@ -2,23 +2,16 @@ package net.keepsakes.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.keepsakes.item.CustomPrimaryUseItem;
-import net.keepsakes.item.ModItems;
-import net.keepsakes.networking.packet.DematerializerLeftClickPayload;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.CustomPayload;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Mixin(MinecraftClient.class)
 public class ClientPlayerEntityMixin {
