@@ -62,6 +62,9 @@ dependencies {
     // Accessories API
     modImplementation("io.wispforest:accessories-fabric:${project.accessories_version}")
 
+	// Additional Entity Attributes
+	modImplementation("maven.modrinth:additionalentityattributes:${project.additional_entity_attributes_version}")
+
 	// Text Animator API
 	modImplementation("maven.modrinth:text-animator:${project.text_animator_version}")
 

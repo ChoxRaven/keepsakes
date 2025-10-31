@@ -1,5 +1,6 @@
 package net.keepsakes.item.custom;
 
+import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import net.keepsakes.Keepsakes;
 import net.keepsakes.index.ModSounds;
 import net.keepsakes.item.CustomCriticalHitItem;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class HarvestersScytheItem extends SwordItem implements CustomCriticalHitItem {
     private static final Identifier ENTITY_REACH_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_reach_modifier");
+    private static final Identifier CRIT_DAMAGE_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_crit_damage_modifier");
 
     public HarvestersScytheItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings
@@ -62,6 +64,16 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
                 new EntityAttributeModifier(
                         ENTITY_REACH_MODIFIER_ID,
                         0.5,
+                        EntityAttributeModifier.Operation.ADD_VALUE
+                ),
+                AttributeModifierSlot.MAINHAND
+        );
+
+        builder.add(
+                AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE,
+                new EntityAttributeModifier(
+                        CRIT_DAMAGE_MODIFIER_ID,
+                        1,
                         EntityAttributeModifier.Operation.ADD_VALUE
                 ),
                 AttributeModifierSlot.MAINHAND
