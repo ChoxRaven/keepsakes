@@ -18,7 +18,6 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -93,7 +92,7 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
         float damageDealt = target.getMaxHealth() - target.getHealth();
         float healingAmount = damageDealt * 0.15f;
 
-        attacker.getWorld().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), ModSounds.HARVESTERS_SCYTHE_CRITICAL, attacker.getSoundCategory(), 1.0f, 1.0f);
+        attacker.getWorld().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), ModSounds.HARVESTERS_SCYTHE_CRITICAL, attacker.getSoundCategory(), 1.0f, (float) (1.0f + attacker.getRandom().nextGaussian() / 10f));
 
         attacker.heal(healingAmount);
     }
