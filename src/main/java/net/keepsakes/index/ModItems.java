@@ -1,7 +1,7 @@
 package net.keepsakes.index;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.custom.*;
+import net.keepsakes.item.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.registry.Registries;

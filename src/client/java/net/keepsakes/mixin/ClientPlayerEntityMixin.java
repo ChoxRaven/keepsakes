@@ -1,7 +1,7 @@
 package net.keepsakes.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.keepsakes.item.CustomPrimaryUseItem;
+import net.keepsakes.item.base.CustomPrimaryUseItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;

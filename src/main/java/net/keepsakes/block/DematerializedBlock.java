@@ -1,7 +1,8 @@
-package net.keepsakes.block.custom;
+package net.keepsakes.block;
 
 import com.mojang.serialization.MapCodec;
-import net.keepsakes.block.entity.ModBlockEntities;
+import net.keepsakes.block.entity.DematerializedBlockEntity;
+import net.keepsakes.index.ModBlockEntities;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;

@@ -3,8 +3,8 @@ package net.keepsakes;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.keepsakes.block.ModBlocks;
-import net.keepsakes.block.entity.ModBlockEntities;
+import net.keepsakes.index.ModBlocks;
+import net.keepsakes.index.ModBlockEntities;
 import net.keepsakes.index.*;
 import net.keepsakes.networking.ModNetworking;
 import net.minecraft.particle.SimpleParticleType;
@@ -32,8 +32,8 @@ public class Keepsakes implements ModInitializer {
 		// Proceed with mild caution.
 		ModNetworking.initialize();
 
-		ModBlocks.registerBlocks();
-		ModBlockEntities.registerBlockEntities();
+		ModBlocks.initialize();
+		ModBlockEntities.initialize();
 		ModSounds.initialize();
 		ModItems.initialize();
 

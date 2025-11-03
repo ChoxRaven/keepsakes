@@ -1,7 +1,7 @@
-package net.keepsakes.item.custom;
+package net.keepsakes.item;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.CustomPrimaryUseItem;
+import net.keepsakes.item.base.CustomPrimaryUseItem;
 import net.keepsakes.networking.packet.DematerializerLeftClickPayload;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

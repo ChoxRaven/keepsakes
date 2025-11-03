@@ -3,7 +3,7 @@ package net.keepsakes.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.keepsakes.block.ModBlocks;
+import net.keepsakes.index.ModBlocks;
 import net.keepsakes.helper.GameRendererPickHelper;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;

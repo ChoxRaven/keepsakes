@@ -1,4 +1,4 @@
-package net.keepsakes.item.custom;
+package net.keepsakes.item;
 
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.UnbreakableComponent;

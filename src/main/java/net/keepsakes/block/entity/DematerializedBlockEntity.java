@@ -1,7 +1,7 @@
-package net.keepsakes.block.custom;
+package net.keepsakes.block.entity;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.block.entity.ModBlockEntities;
+import net.keepsakes.index.ModBlockEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

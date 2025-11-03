@@ -1,6 +1,6 @@
 package net.keepsakes.mixin;
 
-import net.keepsakes.item.CustomCriticalHitItem;
+import net.keepsakes.item.base.CustomCriticalHitItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

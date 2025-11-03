@@ -1,8 +1,8 @@
 package net.keepsakes.item.logic;
 
 import net.keepsakes.Keepsakes;
-import net.keepsakes.block.ModBlocks;
-import net.keepsakes.block.custom.DematerializedBlockEntity;
+import net.keepsakes.index.ModBlocks;
+import net.keepsakes.block.entity.DematerializedBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

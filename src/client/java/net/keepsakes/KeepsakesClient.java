@@ -1,9 +1,6 @@
 package net.keepsakes;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.keepsakes.block.entity.ModBlockEntities;
-import net.keepsakes.rendering.DematerializedBlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
 public class KeepsakesClient implements ClientModInitializer {
 	@Override

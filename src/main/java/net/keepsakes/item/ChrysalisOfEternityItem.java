@@ -1,9 +1,9 @@
-package net.keepsakes.item.custom;
+package net.keepsakes.item;
 
-import io.wispforest.accessories.api.AccessoryItem;
 import io.wispforest.accessories.api.attributes.AccessoryAttributeBuilder;
 import io.wispforest.accessories.api.slot.SlotReference;
 import net.keepsakes.Keepsakes;
+import net.keepsakes.item.base.GenericAccessoryItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ChrysalisOfEternityItem extends AccessoryItem {
+public class ChrysalisOfEternityItem extends GenericAccessoryItem {
     // * Item Settings
     public ChrysalisOfEternityItem(Settings settings) {
         super(settings

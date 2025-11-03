@@ -1,6 +1,6 @@
-package net.keepsakes.item.custom;
-import io.wispforest.accessories.api.AccessoryItem;
+package net.keepsakes.item;
 import io.wispforest.accessories.api.slot.SlotReference;
+import net.keepsakes.item.base.GenericAccessoryItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +24,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import java.util.List;
 
-public class EternalSnowflakeItem extends AccessoryItem {
+public class EternalSnowflakeItem extends GenericAccessoryItem {
     // * Item Settings
     public EternalSnowflakeItem(Settings settings) {
         super(settings

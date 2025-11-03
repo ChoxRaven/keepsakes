@@ -1,4 +1,4 @@
-package net.keepsakes.item;
+package net.keepsakes.item.base;
 
 import net.minecraft.network.packet.CustomPayload;
 import org.jetbrains.annotations.Nullable;

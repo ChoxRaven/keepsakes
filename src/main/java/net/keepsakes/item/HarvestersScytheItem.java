@@ -1,9 +1,9 @@
-package net.keepsakes.item.custom;
+package net.keepsakes.item;
 
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import net.keepsakes.Keepsakes;
 import net.keepsakes.index.ModSounds;
-import net.keepsakes.item.CustomCriticalHitItem;
+import net.keepsakes.item.base.CustomCriticalHitItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
