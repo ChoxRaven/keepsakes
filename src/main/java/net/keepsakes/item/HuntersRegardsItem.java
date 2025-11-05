@@ -1,20 +1,33 @@
 package net.keepsakes.item;
 
-import net.keepsakes.item.base.CustomPrimaryUseItem;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-public class HuntersRegardsItem extends Item implements CustomPrimaryUseItem {
+public class HuntersRegardsItem extends Item{
     public HuntersRegardsItem(Settings settings) {
         super(settings);
     }
 
     @Override
-    public @Nullable CustomPayload getPrimaryUsePayload() {
-        return null;
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+        // Play a sound every 10 ticks, up to 6 times, that increase with pitch every time
+        return TypedActionResult.success(itemStack, false);
+    }
+
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return super.getUseAction(stack);
+    }
+
+    @Override
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        // Send mark release packet
     }
 }
