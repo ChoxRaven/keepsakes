@@ -1,11 +1,14 @@
 package net.keepsakes.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.keepsakes.Keepsakes;
 import net.keepsakes.item.base.CustomPrimaryUseItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.CustomPayload;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,6 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ClientPlayerEntityMixin {
     @Shadow
     public ClientPlayerEntity player;
+
+    @Shadow
+    @Nullable
+    public ClientWorld world;
 
     // Intercept attack (left-click on entity or air)
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
@@ -30,6 +37,8 @@ public class ClientPlayerEntityMixin {
                 if (payload != null) {
                     ClientPlayNetworking.send(payload);
                 }
+
+                customPrimaryUseItem.primaryUse(world, player, player.getActiveHand());
 
                 if (shouldCancelEntityAttacking) {
                     cir.setReturnValue(false); // Cancel the attack
@@ -45,6 +54,8 @@ public class ClientPlayerEntityMixin {
             ItemStack mainHandStack = player.getMainHandStack();
             if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
                 boolean shouldCancelBlockBreaking = customPrimaryUseItem.shouldCancelBlockBreaking();
+
+                customPrimaryUseItem.primaryUseHeld(world, player, player.getActiveHand());
 
                 if (shouldCancelBlockBreaking) {
                     ci.cancel(); // Cancel block breaking
