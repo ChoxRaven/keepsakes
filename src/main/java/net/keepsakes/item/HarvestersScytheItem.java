@@ -111,7 +111,8 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
 
     @Override
     public void appendStatsTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type) {
-        int index = tooltip.indexOf(Text.translatable("item.modifiers.mainhand").formatted(Formatting.GRAY));
+        int index = tooltip.indexOf(Text.translatable("attribute.name.generic.attack_speed").formatted(Formatting.DARK_GREEN));
+        tooltip.indexOf(Text.translatable("attribute.name.generic").formatted(Formatting.GRAY));
 
         tooltip.add(index + 1, Text.translatable("item.keepsakes.keywords.unwieldy").formatted(Formatting.DARK_GREEN));
     }
