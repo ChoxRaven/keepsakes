@@ -4,6 +4,8 @@ import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import net.keepsakes.Keepsakes;
 import net.keepsakes.index.ModSounds;
 import net.keepsakes.item.base.CustomCriticalHitItem;
+import net.keepsakes.item.base.CustomPrimaryUseItem;
+import net.keepsakes.item.base.CustomStatsTooltipItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
@@ -16,15 +18,35 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HarvestersScytheItem extends SwordItem implements CustomCriticalHitItem {
+public class HarvestersScytheItem extends SwordItem implements CustomCriticalHitItem, CustomPrimaryUseItem, CustomStatsTooltipItem {
     private static final Identifier ENTITY_REACH_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_reach_modifier");
     private static final Identifier CRIT_DAMAGE_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_crit_damage_modifier");
+
+    @Override
+    public @Nullable CustomPayload getPrimaryUsePayload() {
+        return null;
+    }
+
+    @Override
+    public boolean shouldCancelEntityAttacking(PlayerEntity user) {
+        float attackCooldownProgress = user.getAttackCooldownProgress(0f);
+
+        return attackCooldownProgress != 1.0f;
+    }
+
+    @Override
+    public boolean shouldCancelBlockBreaking(PlayerEntity user) {
+        return false;
+    }
 
     public HarvestersScytheItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings
@@ -84,7 +106,14 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.tooltip").formatted(Formatting.DARK_GRAY));
-        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.explanation1").formatted(Formatting.GREEN));
+        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.explanation").formatted(Formatting.GREEN));
+    }
+
+    @Override
+    public void appendStatsTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type) {
+        int index = tooltip.indexOf(Text.translatable("item.modifiers.mainhand").formatted(Formatting.GRAY));
+
+        tooltip.add(index + 1, Text.translatable("item.keepsakes.keywords.unwieldy").formatted(Formatting.DARK_GREEN));
     }
 
     @Override

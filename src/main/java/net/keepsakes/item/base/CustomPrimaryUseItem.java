@@ -18,11 +18,11 @@ public interface CustomPrimaryUseItem {
         // Called every tick on the client while the player holds primary use
     }
 
-    default boolean shouldCancelEntityAttacking() {
+    default boolean shouldCancelEntityAttacking(PlayerEntity user) {
         return true;
     }
 
-    default boolean shouldCancelBlockBreaking() {
+    default boolean shouldCancelBlockBreaking(PlayerEntity user) {
         return true;
     }
 }

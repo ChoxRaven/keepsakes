@@ -22,11 +22,6 @@ public class HuntersRegardsItem extends Item{
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return super.getUseAction(stack);
-    }
-
-    @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         // Send mark release packet
     }

@@ -3,6 +3,7 @@
   "package": "net.keepsakes.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ItemStackMixin",
     "PlayerEntityMixin"
   ],
   "injectors": {

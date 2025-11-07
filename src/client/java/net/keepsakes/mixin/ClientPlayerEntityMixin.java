@@ -32,7 +32,7 @@ public class ClientPlayerEntityMixin {
             ItemStack mainHandStack = player.getMainHandStack();
             if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
                 CustomPayload payload = customPrimaryUseItem.getPrimaryUsePayload();
-                boolean shouldCancelEntityAttacking = customPrimaryUseItem.shouldCancelEntityAttacking();
+                boolean shouldCancelEntityAttacking = customPrimaryUseItem.shouldCancelEntityAttacking(player);
 
                 if (payload != null) {
                     ClientPlayNetworking.send(payload);
@@ -53,7 +53,7 @@ public class ClientPlayerEntityMixin {
         if (breaking && player != null) {
             ItemStack mainHandStack = player.getMainHandStack();
             if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
-                boolean shouldCancelBlockBreaking = customPrimaryUseItem.shouldCancelBlockBreaking();
+                boolean shouldCancelBlockBreaking = customPrimaryUseItem.shouldCancelBlockBreaking(player);
 
                 customPrimaryUseItem.primaryUseHeld(world, player, player.getActiveHand());
 
