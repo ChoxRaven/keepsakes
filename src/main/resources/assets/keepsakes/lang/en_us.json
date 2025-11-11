@@ -1,8 +1,13 @@
 {
-  "item.keepsakes.misc.hold_for_info": "Hold %s for additional information",
   "item.keepsakes.misc.toggle_info": "Sneak + Use to toggle effect(s)",
+  "item.keepsakes.tooltip.hold_shift": " Hold Shift",
 
   "item.keepsakes.keywords.unwieldy": " Unwieldy",
+  "item.keepsakes.keywords.brutal": " Brutal",
+  "item.keepsakes.keywords.relentless": " Relentless",
+  "item.keepsakes.keywords.heavy": " Heavy",
+  "item.keepsakes.keywords.light": " Light",
+  "item.keepsakes.keywords.charged": " Charged",
 
   "item.keepsakes.eternal_snowflake": "§bEternal Snowflake",
   "item.keepsakes.eternal_snowflake.tooltip": "<wave a=0.25 f=1.0 w=0.25>A frigid, complex fractal that contains the essence of Winter.</wave>",
@@ -12,8 +17,11 @@
   "item.keepsakes.eternal_snowflake.frost_walker_explanation3": "- Works while standing still",
 
   "item.keepsakes.harvesters_scythe": "§aHarvester's Scythe",
-  "item.keepsakes.harvesters_scythe.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>It takes a brave man to look death in the eye and claim they don't need help.</wave>\"",
-  "item.keepsakes.harvesters_scythe.explanation": "Deal an additional 100% damage when landing a critical hit, and heal 15% of the damage dealt.",
+  "item.keepsakes.harvesters_scythe.lore": "\"<wave a=0.25 f=1.0 w=0.25>It takes a brave man to look death in the eye and claim they don't need help.</wave>\"",
+  "item.keepsakes.harvesters_scythe.ability": "Tragedy of Mercury",
+  "item.keepsakes.harvesters_scythe.ability_tooltip": " Deal <shake>%s</shake> damage when landing a critical hit, and heal §a%s§8 of the damage dealt.",
+
+  "item.keepsakes.firestarters_claymore": "§cFirestarter's Scythe",
 
   "item.keepsakes.chrysalis_of_eternity": "§dChrysalis of Eternity",
   "item.keepsakes.chrysalis_of_eternity.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>What good are kings in the realm of gods?</wave>\"",
@@ -26,5 +34,5 @@
   "item.keepsakes.hf_murasama.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>You deny your weapon it's purpose.<wave>\"",
 
   "item.keepsakes.dematerializer": "<glitch>Dematerializer</glitch>",
-  "item.keepsakes.dematerializer.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>The world's greatest game show<wave>\""
+  "item.keepsakes.dematerializer.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>The world's greatest game show!<wave>\""
 }

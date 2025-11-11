@@ -20,6 +20,7 @@ public interface ModItems {
     // ? Chox
     Item HARVESTERS_SCYTHE = create("harvesters_scythe", new HarvestersScytheItem(ToolMaterials.NETHERITE, new Item.Settings())); // +8 +8 +8 +8
     Item HUNTERS_REGARDS = create("hunters_regards", new HuntersRegardsItem(new Item.Settings())); // What HP?
+    Item FIRESTARTERS_CLAYMORE = create("firestarters_claymore", new FirestartersClaymoreItem(ToolMaterials.IRON, new Item.Settings()));
     Item RADIANT_VIRTUE = create("radiant_virtue", new Item(new Item.Settings())); // Buffs when out in the sun
     Item ASPECT_OF_THE_ELEMENTS = create("aspect_of_the_elements", new Item(new Item.Settings())); // Buffs based on the stats of the current biome (hot, cold, humid, etc.)
     Item DEMATERIALIZER = create("dematerializer", new DematerializerItem(new Item.Settings())); // The Finales
