@@ -19,9 +19,12 @@
   "item.keepsakes.harvesters_scythe": "§aHarvester's Scythe",
   "item.keepsakes.harvesters_scythe.lore": "\"<wave a=0.25 f=1.0 w=0.25>It takes a brave man to look death in the eye and claim they don't need help.</wave>\"",
   "item.keepsakes.harvesters_scythe.ability": "<plaque>Tragedy of Mercury</plaque>",
-  "item.keepsakes.harvesters_scythe.ability_tooltip": " Deal §c<delayedshake f=2>2.5x</delayedshake> §7damage when landing a critical hit, and heal §a<turb>15%</turb> §7of the damage dealt.",
+  "item.keepsakes.harvesters_scythe.ability_tooltip": " When landing a critical hit, deal §c<delayedshake f=2>2.5x</delayedshake> §7damage, and heal §a<turb>15%</turb> §7of the damage dealt.",
 
   "item.keepsakes.firestarters_claymore": "§cFirestarter's Claymore",
+  "item.keepsakes.firestarters_claymore.lore": "\"<wave a=0.25 f=1.0 w=0.25>The greatest pyromancer knows when to snuff out the spark.</wave>\"",
+  "item.keepsakes.firestarters_claymore.ability": "<plaque>Sworn Duty</plaque>",
+  "item.keepsakes.firestarters_claymore.ability_tooltip": " when landing a hit, convert remaining §6<wave a=0.25 f=1.0 w=0.25>burn time</wave> §7into §6<delayedshake f=2>fire damage</delayedshake>§7.",
 
   "item.keepsakes.chrysalis_of_eternity": "§dChrysalis of Eternity",
   "item.keepsakes.chrysalis_of_eternity.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>What good are kings in the realm of gods?</wave>\"",
