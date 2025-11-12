@@ -29,7 +29,7 @@ public interface ModBlockEntities {
         return blockEntityType;
     }
 
-    public static void initialize() {
+    static void initialize() {
         BLOCK_ENTITY_TYPES.forEach(((blockEntityType, id) ->
                 Registry.register(Registries.BLOCK_ENTITY_TYPE, id, blockEntityType))
         );

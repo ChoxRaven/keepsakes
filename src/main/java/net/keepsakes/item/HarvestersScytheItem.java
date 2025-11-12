@@ -106,10 +106,6 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.lore").formatted(Formatting.DARK_GRAY));
-
-        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.ability").formatted(Formatting.GOLD));
-
         boolean showDetails = false;
         try {
             Class<?> screenClass = Class.forName("net.minecraft.client.gui.screen.Screen");
@@ -121,13 +117,13 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
             Keepsakes.LOGGER.error("CLIENT: Reflection failed: {}", e.getMessage(), e);
         }
 
-        if (!showDetails) {
-            tooltip.add(Text.translatable("item.keepsakes.tooltip.hold_shift").formatted(Formatting.GRAY));
-        } else {
-            String critDamageString = critDamageMultiplier + 1.5f + "x";
-            String lifestealString = (int) (lifestealMultiplier * 100) + "%";
-            tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.ability_tooltip",
-                    critDamageString, lifestealString).formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.lore").formatted(Formatting.DARK_GRAY));
+
+        tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.ability").formatted(Formatting.GOLD)
+                .append(Text.translatable(!showDetails ? "item.keepsakes.ability.hold_shift" : "").formatted(Formatting.DARK_GRAY)));
+
+        if (showDetails) {
+            tooltip.add(Text.translatable("item.keepsakes.harvesters_scythe.ability_tooltip").formatted(Formatting.GRAY));
         }
     }
 

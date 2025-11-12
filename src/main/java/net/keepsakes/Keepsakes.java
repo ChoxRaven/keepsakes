@@ -36,6 +36,7 @@ public class Keepsakes implements ModInitializer {
 		ModBlockEntities.initialize();
 		ModSounds.initialize();
 		ModItems.initialize();
+        ModTextEffects.initialize();
 
 		LOGGER.info("Keepsakes mod initialized successfully!");
 	}

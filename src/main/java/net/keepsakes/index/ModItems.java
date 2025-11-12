@@ -48,7 +48,7 @@ public interface ModItems {
         return item;
     }
 
-    public static void initialize() {
+    static void initialize() {
         ITEMS.forEach((item, id) -> Registry.register(Registries.ITEM, id, item));
     }
 }

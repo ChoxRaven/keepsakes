@@ -24,7 +24,7 @@ public interface ModBlocks {
         return block;
     }
 
-    public static void initialize() {
+    static void initialize() {
         BLOCKS.forEach((block, id) -> Registry.register(Registries.BLOCK, id, block));
     }
 }
