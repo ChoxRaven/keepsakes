@@ -27,10 +27,7 @@ import java.util.List;
 public class EternalSnowflakeItem extends GenericAccessoryItem {
     // * Item Settings
     public EternalSnowflakeItem(Settings settings) {
-        super(settings
-                .maxCount(1)
-                .fireproof()
-        );
+        super(settings.fireproof(), 2, false);
     }
 
     // ? Freezes all water under the player, in a radius
@@ -91,7 +88,7 @@ public class EternalSnowflakeItem extends GenericAccessoryItem {
         tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
 
         // ? Lore
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.tooltip").formatted(Formatting.DARK_GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.lore").formatted(Formatting.DARK_GRAY));
 
         // * Add Enhanced Frost Walker toggle status to tooltip
         boolean frostWalkerEnabled = isFrostWalkerEnabled(stack);

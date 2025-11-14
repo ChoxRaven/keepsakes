@@ -37,7 +37,7 @@ public class PlaqueEffect extends BaseEffect {
             settings.g = lerp(whiteness, 1.0f, settings.g);
             settings.b = lerp(whiteness, 1.0f, settings.b);
         }
-        settings.y += (whiteness * 2.5f) - 2.5f;
+        settings.y += (whiteness * 2f) - 2f;
     }
 
     private float lerp(float delta, float start, float end) {

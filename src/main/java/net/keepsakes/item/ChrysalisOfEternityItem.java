@@ -24,93 +24,92 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
+import java.text.Normalizer;
 import java.util.List;
 
 public class ChrysalisOfEternityItem extends GenericAccessoryItem {
+    // ? Attribute Modifier IDs
+    private static final Identifier DEFENSE_ID = Identifier.of(Keepsakes.MOD_ID, "ambition_defense_modifier");
+    private static final Identifier ATTACK_DAMAGE_ID = Identifier.of(Keepsakes.MOD_ID, "ambition_damage_modifier");
+    private static final Identifier ATTACK_SPEED_ID = Identifier.of(Keepsakes.MOD_ID, "ambition_attack_speed_modifier");
+
     // * Item Settings
     public ChrysalisOfEternityItem(Settings settings) {
-        super(settings
-                .maxCount(1)
-                .fireproof()
-        );
+        super(settings.fireproof(), 2, false);
+    }
+
+    @Override
+    protected boolean canCycleState(ItemStack stack, PlayerEntity player) {
+        return !isAbilityLocked(stack) && player.getHealth() >= player.getMaxHealth() / 2f;
+    }
+
+    @Override
+    protected void onStateChanged(ItemStack stack, PlayerEntity player, int oldState, int newState) {
+        World world = player.getWorld();
+        world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                newState == 1 ? SoundEvents.BLOCK_SOUL_SAND_BREAK : SoundEvents.BLOCK_SOUL_SAND_PLACE,
+                player.getSoundCategory(), 2f, 1.0f);
+
+        Formatting formatting = newState == 1 ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
+
+        if (world.isClient) {
+            player.sendMessage(Text.translatable("item.keepsakes.ability.status").formatted(Formatting.GRAY)
+                    .append(Text.literal(newState == 1 ? " ON" : " OFF").formatted(formatting)), true);
+        }
+
+    }
+
+    @Override
+    protected void onStateChangeBlocked(ItemStack stack, PlayerEntity player, int currentState) {
+        player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.BLOCK_CHAIN_PLACE, player.getSoundCategory(), 0.5f, 0.8f);
+
+        // Send locked message
+        if (player.getHealth() <= player.getMaxHealth() / 2f) {
+            player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
+                    .append(Text.translatable("item.keepsakes.chrysalis_of_eternity.ability_toggle_requirement").formatted(Formatting.RED)), true);
+        } else {
+            player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
+                    .append(Text.translatable("item.keepsakes.ability.locked")), true);
+        }
     }
 
     // * Tooltip
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        // ? Toggle info
-        tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
+        boolean showDetails = false;
+        try {
+            Class<?> screenClass = Class.forName("net.minecraft.client.gui.screen.Screen");
+            var hasShiftDownMethod = screenClass.getMethod("hasShiftDown");
+            showDetails = (Boolean) hasShiftDownMethod.invoke(null);
+        } catch (ClassNotFoundException e) {
+            Keepsakes.LOGGER.error("CLIENT: Screen class not found - this is expected on server");
+        } catch (Exception e) {
+            Keepsakes.LOGGER.error("CLIENT: Reflection failed: {}", e.getMessage(), e);
+        }
 
         // ? Lore
-        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.tooltip").formatted(Formatting.DARK_GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.lore").formatted(Formatting.DARK_GRAY));
 
-        // * Add King Azamoth's Ambition toggle status to tooltip
-        boolean ambitionEnabled = isAmbitionEnabled(stack);
-        Formatting ambitionFormatting = ambitionEnabled ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
-        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition",
-                ambitionEnabled ? "<neon>ON</neon>" : "OFF").formatted(ambitionFormatting));
+        // ? Toggle info
+        Formatting formatting = getAbilityState(stack) == 1 ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
+        tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.ability.cycle_info").formatted(Formatting.GRAY)
+                .append(Text.translatable("item.keepsakes.chrysalis_of_eternity.ability_toggle_requirement").formatted(Formatting.RED)));
+        tooltip.add(Text.translatable("item.keepsakes.ability.status").formatted(Formatting.GRAY)
+                .append(Text.literal(getAbilityState(stack) == 1 ? " On" : " Off").formatted(formatting)));
 
-        // ? Explanation for King Azamoth's Ambition
-        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.stats_explanation1").formatted(ambitionFormatting));
-        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.stats_explanation2").formatted(ambitionFormatting));
-        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.stats_explanation3").formatted(ambitionFormatting));
-    }
-
-    // ? Toggle for King Azamoth's Ambition
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-
-        // * Toggle King Azamoth's Ambition
-        boolean currentState = isAmbitionEnabled(stack);
-        setAmbitionStatus(stack, !currentState);
-
-        // * Play sound effect for feedback
-        world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                currentState ? SoundEvents.BLOCK_SOUL_SAND_BREAK : SoundEvents.BLOCK_SOUL_SAND_PLACE,
-                SoundCategory.PLAYERS, 2f, currentState ? 0.5f : 1.2f);
-
-        // * Send message to player
-        if (world.isClient) {
-            boolean newState = !currentState;
-            Formatting formatting = newState ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
-            user.sendMessage(Text.translatable("item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition",
-                    newState ? "<neon>ON</neon>" : "OFF").formatted(formatting), true);
+        tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.ability").formatted(Formatting.GOLD)
+                .append(Text.translatable(!showDetails ? "item.keepsakes.ability.hold_shift" : "").formatted(Formatting.DARK_GRAY)));
+        if (showDetails) {
+            tooltip.add(Text.translatable("item.keepsakes.chrysalis_of_eternity.ability_tooltip").formatted(Formatting.GRAY));
         }
-
-        return TypedActionResult.success(stack, true);
     }
-
-    // ? Helper methods for item components
-    private boolean isAmbitionEnabled(ItemStack stack) {
-        // * Check if the stack has the custom_data component with the Ambition property
-        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
-        if (customData != null) {
-            // * Get the NBT compound and check for the property
-            return customData.copyNbt().getBoolean("Ambition");
-        }
-        return false;
-    }
-
-    private void setAmbitionStatus(ItemStack stack, boolean enabled) {
-        // * Get or create the custom_data component
-        NbtComponent customData = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
-        // * Create a new NBT compound with the property
-        NbtCompound nbt = customData.copyNbt();
-        nbt.putBoolean("Ambition", enabled);
-        // * Set the updated component
-        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
-    }
-
-    // ? Attribute Modifiers
-    private static final Identifier DEFENSE_ID = Identifier.of(Keepsakes.MOD_ID, "ambition_defense_modifier");
-    private static final Identifier ATTACK_DAMAGE_ID = Identifier.of(Keepsakes.MOD_ID, "ambition_damage_modifier");
-    private static final Identifier ATTACK_SPEED_ID = Identifier.of(Keepsakes.MOD_ID, "ambition_attack_speed_modifier");
 
     @Override
     public void getModifiers(ItemStack stack, SlotReference reference, AccessoryAttributeBuilder builder) {
         if (reference.slotName().equals("hat")) {
-            if (isAmbitionEnabled(stack)) {
+            if (getAbilityState(stack) == 1) {
                 builder.addExclusive(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(DEFENSE_ID, -6.0f, EntityAttributeModifier.Operation.ADD_VALUE));
                 builder.addExclusive(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_ID, 0.5f, EntityAttributeModifier.Operation.ADD_VALUE));
                 builder.addExclusive(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_ID, 0.2f, EntityAttributeModifier.Operation.ADD_VALUE));
@@ -130,7 +129,7 @@ public class ChrysalisOfEternityItem extends GenericAccessoryItem {
         }
 
         // * Spawn particles
-        if (!(player.getEntityWorld().isClient) && isAmbitionEnabled(stack)) {
+        if (!(player.getEntityWorld().isClient) && getAbilityState(stack) == 1) {
             Random random = player.getEntityWorld().getRandom();
             if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
                 double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;

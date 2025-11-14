@@ -1,6 +1,10 @@
 {
-  "item.keepsakes.misc.toggle_info": "Sneak + Use to toggle effect(s)",
+  "item.keepsakes.misc.toggle_info": "Sneak + Use to toggle effect(s), or interact in inventory.",
   "item.keepsakes.ability.hold_shift": " [Hold Shift]",
+  "item.keepsakes.ability.cycle_info": "Can not cycle if",
+  "item.keepsakes.ability.cycle_failed": "Unable to cycle!",
+  "item.keepsakes.ability.locked": " §c<delayedshake f=2>This item is locked</delayedshake>",
+  "item.keepsakes.ability.status": "Status:",
 
   "item.keepsakes.keywords.unwieldy": " Unwieldy",
   "item.keepsakes.keywords.brutal": " Brutal",
@@ -10,7 +14,7 @@
   "item.keepsakes.keywords.charged": " Charged",
 
   "item.keepsakes.eternal_snowflake": "§bEternal Snowflake",
-  "item.keepsakes.eternal_snowflake.tooltip": "<wave a=0.25 f=1.0 w=0.25>A frigid, complex fractal that contains the essence of Winter.</wave>",
+  "item.keepsakes.eternal_snowflake.lore": "<wave a=0.25 f=1.0 w=0.25>A frigid, complex fractal that contains the essence of Winter.</wave>",
   "item.keepsakes.eternal_snowflake.frost_walker": "Enhanced Frost Walker: %s",
   "item.keepsakes.eternal_snowflake.frost_walker_explanation1": "- Freezes with a radius of 3 blocks around the player",
   "item.keepsakes.eternal_snowflake.frost_walker_explanation2": "- Does not require the player to be grounded first",
@@ -27,11 +31,10 @@
   "item.keepsakes.firestarters_claymore.ability_tooltip": " when landing a hit, convert remaining §6<wave a=0.25 f=1.0 w=0.25>burn time</wave> §7into §6<delayedshake f=2>fire damage</delayedshake>§7.",
 
   "item.keepsakes.chrysalis_of_eternity": "§dChrysalis of Eternity",
-  "item.keepsakes.chrysalis_of_eternity.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>What good are kings in the realm of gods?</wave>\"",
-  "item.keepsakes.chrysalis_of_eternity.king_azamoths_ambition": "King Azamoth's Ambition: %s",
-  "item.keepsakes.chrysalis_of_eternity.stats_explanation1": "- Increases Attack Speed by 0.2",
-  "item.keepsakes.chrysalis_of_eternity.stats_explanation2": "- Increases Damage by by 0.5",
-  "item.keepsakes.chrysalis_of_eternity.stats_explanation3": "- Decreases Armor by 6",
+  "item.keepsakes.chrysalis_of_eternity.lore": "\"<wave a=0.25 f=1.0 w=0.25>What good are kings in the realm of gods?</wave>\"",
+  "item.keepsakes.chrysalis_of_eternity.ability": "<plaque>King Azamoth's Ambition</plaque>",
+  "item.keepsakes.chrysalis_of_eternity.ability_tooltip": " Increases Attack Speed and Damage, §c<delayedshake f=2>BUT reduces armor</delayedshake>§7.",
+  "item.keepsakes.chrysalis_of_eternity.ability_toggle_requirement": " HP is under 50%",
 
   "item.keepsakes.hf_murasama": "§cHF Murasama",
   "item.keepsakes.hf_murasama.tooltip": "\"<wave a=0.25 f=1.0 w=0.25>You deny your weapon it's purpose.<wave>\"",

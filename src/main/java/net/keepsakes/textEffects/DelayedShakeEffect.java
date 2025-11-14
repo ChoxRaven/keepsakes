@@ -21,6 +21,7 @@ public class DelayedShakeEffect extends BaseEffect {
         long baseTime = (long) (Util.getMeasuringTimeMs() * 0.01F * speed + settings.codepoint + settings.index);
 
         Vec2f dir;
+
         if (settings.isShadow) {
             dir = TextAnimatorClient.getRandomDirection((int) (baseTime - 1));
 
