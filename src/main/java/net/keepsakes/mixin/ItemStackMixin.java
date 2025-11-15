@@ -1,6 +1,6 @@
 package net.keepsakes.mixin;
 
-import net.keepsakes.item.base.CustomStatsTooltipItem;
+import net.keepsakes.item.base.CustomTooltipItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,8 +20,8 @@ public class ItemStackMixin {
         ItemStack stack = (ItemStack) (Object) this;
         List<Text> tooltip = cir.getReturnValue();
 
-        if (stack.getItem() instanceof CustomStatsTooltipItem customItem) {
-            customItem.appendStatsTooltip(stack, player, tooltip, type);
+        if (stack.getItem() instanceof CustomTooltipItem customItem) {
+            customItem.appendCustomTooltip(stack, player, tooltip, type);
         }
     }
 }

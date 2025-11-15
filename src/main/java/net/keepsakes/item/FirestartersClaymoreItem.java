@@ -1,10 +1,8 @@
 package net.keepsakes.item;
 
-import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import net.keepsakes.Keepsakes;
-import net.keepsakes.item.base.CustomCriticalHitItem;
 import net.keepsakes.item.base.CustomPrimaryUseItem;
-import net.keepsakes.item.base.CustomStatsTooltipItem;
+import net.keepsakes.item.base.CustomTooltipItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
@@ -25,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FirestartersClaymoreItem extends SwordItem implements CustomPrimaryUseItem, CustomStatsTooltipItem {
+public class FirestartersClaymoreItem extends SwordItem implements CustomPrimaryUseItem, CustomTooltipItem {
     public FirestartersClaymoreItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings
                 .maxCount(1)
@@ -95,7 +93,7 @@ public class FirestartersClaymoreItem extends SwordItem implements CustomPrimary
     }
 
     @Override
-    public void appendStatsTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type) {
+    public void appendCustomTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type) {
         int index = tooltip.indexOf(Text.translatable("item.modifiers.mainhand").formatted(Formatting.GRAY));
 
         tooltip.add(index + 1, Text.translatable("item.keepsakes.keywords.charged").formatted(Formatting.DARK_GREEN));

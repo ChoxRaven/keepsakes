@@ -5,7 +5,7 @@ import net.keepsakes.Keepsakes;
 import net.keepsakes.index.ModSounds;
 import net.keepsakes.item.base.CustomCriticalHitItem;
 import net.keepsakes.item.base.CustomPrimaryUseItem;
-import net.keepsakes.item.base.CustomStatsTooltipItem;
+import net.keepsakes.item.base.CustomTooltipItem;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class HarvestersScytheItem extends SwordItem implements CustomCriticalHitItem, CustomPrimaryUseItem, CustomStatsTooltipItem {
+public class HarvestersScytheItem extends SwordItem implements CustomCriticalHitItem, CustomPrimaryUseItem, CustomTooltipItem {
     private static final Identifier ENTITY_REACH_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_reach_modifier");
     private static final Identifier CRIT_DAMAGE_MODIFIER_ID = Identifier.of(Keepsakes.MOD_ID, "harvesters_scythe_entity_crit_damage_modifier");
     private static final float lifestealMultiplier = 0.15f;
@@ -128,7 +128,7 @@ public class HarvestersScytheItem extends SwordItem implements CustomCriticalHit
     }
 
     @Override
-    public void appendStatsTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type) {
+    public void appendCustomTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type) {
         int index = tooltip.indexOf(Text.translatable("item.modifiers.mainhand").formatted(Formatting.GRAY));
 
         tooltip.add(index + 1, Text.translatable("item.keepsakes.keywords.unwieldy").formatted(Formatting.DARK_GREEN));

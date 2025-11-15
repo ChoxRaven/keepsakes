@@ -44,6 +44,18 @@ public class ChrysalisOfEternityItem extends GenericAccessoryItem {
     }
 
     @Override
+    public ItemStack getDefaultStack() {
+        ItemStack stack = super.getDefaultStack();
+        NbtCompound nbt = new NbtCompound();
+
+        nbt.putInt("AbilityState", 0);
+        nbt.putBoolean("AbilityLocked", false);
+
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
+        return stack;
+    }
+
+    @Override
     protected void onStateChanged(ItemStack stack, PlayerEntity player, int oldState, int newState) {
         World world = player.getWorld();
         world.playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -56,7 +68,6 @@ public class ChrysalisOfEternityItem extends GenericAccessoryItem {
             player.sendMessage(Text.translatable("item.keepsakes.ability.status").formatted(Formatting.GRAY)
                     .append(Text.literal(newState == 1 ? " ON" : " OFF").formatted(formatting)), true);
         }
-
     }
 
     @Override

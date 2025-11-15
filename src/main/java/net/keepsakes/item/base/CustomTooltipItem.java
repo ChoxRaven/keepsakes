@@ -7,6 +7,6 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-public interface CustomStatsTooltipItem {
-    void appendStatsTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type);
+public interface CustomTooltipItem {
+    void appendCustomTooltip(ItemStack stack, PlayerEntity user, List<Text> tooltip, TooltipType type);
 }

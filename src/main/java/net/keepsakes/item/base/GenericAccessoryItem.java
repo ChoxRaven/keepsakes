@@ -5,6 +5,7 @@ import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.slot.Slot;
@@ -104,20 +105,23 @@ public class GenericAccessoryItem extends AccessoryItem {
     }
 
     @Override
-    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
-        if (player.getWorld().isClient()) return false;
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         int oldState = getAbilityState(stack);
 
-        if (!canCycleState(stack, player)) {
-            onStateChangeBlocked(stack, player, oldState);
+        if (clickType == ClickType.RIGHT) {
+            if (!canCycleState(stack, player)) {
+                onStateChangeBlocked(stack, player, oldState);
+                return true;
+            }
+
+            cycleAbilityState(stack);
+            int newState = getAbilityState(stack);
+
+            onStateChanged(stack, player, oldState, newState);
             return true;
+        } else {
+            return false;
         }
-
-        cycleAbilityState(stack);
-        int newState = getAbilityState(stack);
-
-        onStateChanged(stack, player, oldState, newState);
-        return true;
     }
 
     @Override
