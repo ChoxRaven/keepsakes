@@ -1,7 +1,6 @@
 package net.keepsakes.mixin;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.keepsakes.Keepsakes;
 import net.keepsakes.item.base.CustomPrimaryUseItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -30,18 +29,20 @@ public class ClientPlayerEntityMixin {
     private void keepsakes$cancelAttacking(CallbackInfoReturnable<Boolean> cir) {
         if (player != null) {
             ItemStack mainHandStack = player.getMainHandStack();
-            if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
-                CustomPayload payload = customPrimaryUseItem.getPrimaryUsePayload();
-                boolean shouldCancelEntityAttacking = customPrimaryUseItem.shouldCancelEntityAttacking(player);
+            if (!mainHandStack.isEmpty()) {
+                if (mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
+                    CustomPayload payload = customPrimaryUseItem.getPrimaryUsePayload();
+                    boolean shouldCancelEntityAttacking = customPrimaryUseItem.shouldCancelEntityAttacking(player);
 
-                if (payload != null) {
-                    ClientPlayNetworking.send(payload);
-                }
+                    if (payload != null) {
+                        ClientPlayNetworking.send(payload);
+                    }
 
-                customPrimaryUseItem.primaryUse(world, player, player.getActiveHand());
+                    customPrimaryUseItem.primaryUse(world, player, player.getActiveHand());
 
-                if (shouldCancelEntityAttacking) {
-                    cir.setReturnValue(false); // Cancel the attack
+                    if (shouldCancelEntityAttacking) {
+                        cir.setReturnValue(false); // Cancel the attack
+                    }
                 }
             }
         }
@@ -52,13 +53,15 @@ public class ClientPlayerEntityMixin {
     private void keepsakes$cancelBlockBreaking(boolean breaking, CallbackInfo ci) {
         if (breaking && player != null) {
             ItemStack mainHandStack = player.getMainHandStack();
-            if (!mainHandStack.isEmpty() && mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
-                boolean shouldCancelBlockBreaking = customPrimaryUseItem.shouldCancelBlockBreaking(player);
+            if (!mainHandStack.isEmpty()) {
+                if (mainHandStack.getItem() instanceof CustomPrimaryUseItem customPrimaryUseItem) {
+                    boolean shouldCancelBlockBreaking = customPrimaryUseItem.shouldCancelBlockBreaking(player);
 
-                customPrimaryUseItem.primaryUseHeld(world, player, player.getActiveHand());
+                    customPrimaryUseItem.primaryUseHeld(world, player, player.getActiveHand());
 
-                if (shouldCancelBlockBreaking) {
-                    ci.cancel(); // Cancel block breaking
+                    if (shouldCancelBlockBreaking) {
+                        ci.cancel(); // Cancel block breaking
+                    }
                 }
             }
         }

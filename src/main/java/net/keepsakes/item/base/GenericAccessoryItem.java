@@ -125,12 +125,14 @@ public class GenericAccessoryItem extends AccessoryItem {
     }
 
     @Override
-    public void onEquip(ItemStack stack, SlotReference reference) {
-        if (stack.get(DataComponentTypes.CUSTOM_DATA) == null) {
-            NbtCompound nbt = new NbtCompound();
-            nbt.putInt("AbilityState", 0);
-            nbt.putBoolean("AbilityLocked", defaultLocked);
-            stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
-        }
+    public ItemStack getDefaultStack() {
+        ItemStack stack = super.getDefaultStack();
+        NbtCompound nbt = new NbtCompound();
+
+        nbt.putInt("AbilityState", 0);
+        nbt.putBoolean("AbilityLocked", false);
+
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
+        return stack;
     }
 }

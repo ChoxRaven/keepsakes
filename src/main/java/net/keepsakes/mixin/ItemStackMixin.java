@@ -16,7 +16,7 @@ import java.util.List;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
     @Inject(method = "getTooltip", at = @At("TAIL"))
-    private void injectCustomStatsTooltip(Item.TooltipContext context, PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir) {
+    private void injectCustomTooltip(Item.TooltipContext context, PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir) {
         ItemStack stack = (ItemStack) (Object) this;
         List<Text> tooltip = cir.getReturnValue();
 

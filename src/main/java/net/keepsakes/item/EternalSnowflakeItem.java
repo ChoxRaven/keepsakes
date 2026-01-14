@@ -1,22 +1,17 @@
 package net.keepsakes.item;
 import io.wispforest.accessories.api.slot.SlotReference;
+import net.keepsakes.Keepsakes;
 import net.keepsakes.item.base.GenericAccessoryItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -81,87 +76,74 @@ public class EternalSnowflakeItem extends GenericAccessoryItem {
                          MathHelper.nextInt(player.getRandom(), 600, 800));
     }
 
+    @Override
+    protected void onStateChanged(ItemStack stack, PlayerEntity player, int oldState, int newState) {
+        World world = player.getWorld();
+
+        Formatting formatting = newState == 1 ? Formatting.AQUA : Formatting.GRAY;
+
+        if (world.isClient) {
+            player.sendMessage(Text.translatable("item.keepsakes.ability.status").formatted(Formatting.GRAY)
+                    .append(Text.literal(newState == 1 ? " On" : " Off").formatted(formatting)), true);
+
+            world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    newState == 1 ? SoundEvents.BLOCK_SNOW_BREAK : SoundEvents.BLOCK_GLASS_PLACE,
+                    player.getSoundCategory(), 2f, 1.0f);
+        }
+    }
+
+    @Override
+    protected void onStateChangeBlocked(ItemStack stack, PlayerEntity player, int currentState) {
+        World world = player.getWorld();
+
+        if (world.isClient) {
+            world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.BLOCK_CHAIN_PLACE, player.getSoundCategory(), 0.5f, 0.8f);
+
+            player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
+                        .append(Text.translatable("item.keepsakes.ability.locked")), true);
+        }
+    }
+
     // * Tooltip
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        // ? Toggle info
-        tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.LIGHT_PURPLE));
+        boolean showDetails = false;
+        try {
+            Class<?> screenClass = Class.forName("net.minecraft.client.gui.screen.Screen");
+            var hasShiftDownMethod = screenClass.getMethod("hasShiftDown");
+            showDetails = (Boolean) hasShiftDownMethod.invoke(null);
+        } catch (ClassNotFoundException e) {
+            Keepsakes.LOGGER.error("CLIENT: Screen class not found - this is expected on server");
+        } catch (Exception e) {
+            Keepsakes.LOGGER.error("CLIENT: Reflection failed: {}", e.getMessage(), e);
+        }
 
         // ? Lore
         tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.lore").formatted(Formatting.DARK_GRAY));
 
-        // * Add Enhanced Frost Walker toggle status to tooltip
-        boolean frostWalkerEnabled = isFrostWalkerEnabled(stack);
-        Formatting frostwalkerFormatting = frostWalkerEnabled ? Formatting.AQUA : Formatting.GRAY;
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
-                frostWalkerEnabled ? "<neon>ON</neon>" : "OFF").formatted(frostwalkerFormatting));
-        
-        // ? Explanation for Enhanced Frost Walker
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation1").formatted(frostwalkerFormatting));
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation2").formatted(frostwalkerFormatting));
-        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker_explanation3").formatted(frostwalkerFormatting));
-    }
+        // ? Toggle info
+        Formatting formatting = getAbilityState(stack) == 1 ? Formatting.AQUA : Formatting.GRAY;
+        tooltip.add(Text.translatable("item.keepsakes.misc.toggle_info").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.keepsakes.ability.status").formatted(Formatting.GRAY)
+                .append(Text.literal(getAbilityState(stack) == 1 ? " On" : " Off").formatted(formatting)));
 
-    // ? Toggle for Frost Walker
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-
-        // * Toggles Frostwalker
-        boolean currentState = isFrostWalkerEnabled(stack);
-        setFrostWalkerStatus(stack, !currentState);
-
-        // * Plays a sound effect for feedback
-        world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                currentState ? SoundEvents.BLOCK_SNOW_BREAK : SoundEvents.BLOCK_GLASS_PLACE,
-                SoundCategory.PLAYERS, 2f, currentState ? 0.5f : 1.2f);
-
-        // * Sends message to player
-        if (world.isClient) {
-            boolean newState = !currentState;
-            Formatting formatting = newState ? Formatting.AQUA : Formatting.GRAY;
-            user.sendMessage(Text.translatable("item.keepsakes.eternal_snowflake.frost_walker",
-                    newState ? "<neon>ON</neon>" : "OFF").formatted(formatting), true);
+        tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.ability").formatted(Formatting.GOLD)
+                .append(Text.translatable(!showDetails ? "item.keepsakes.ability.hold_shift" : "").formatted(Formatting.DARK_GRAY)));
+        if (showDetails) {
+            tooltip.add(Text.translatable("item.keepsakes.eternal_snowflake.ability_tooltip").formatted(Formatting.GRAY));
         }
-
-        return TypedActionResult.success(stack, true);
-    }
-    
-    // ? Checks if Frost Walker is enabled
-    private boolean isFrostWalkerEnabled(ItemStack stack) {
-        // * Checks if the stack has the custom_data component with the property
-        NbtComponent customData = stack.get(DataComponentTypes.CUSTOM_DATA);
-        if (customData != null) {
-            // * Gets the NBT compound and check for Enhanced Frost Walker
-            return customData.copyNbt().getBoolean("FrostWalker");
-        }
-        return false;
-    }
-
-    // ? Toggles Frost Walker
-    private void setFrostWalkerStatus(ItemStack stack, boolean enabled) {
-        // * Get or create the custom_data component
-        NbtComponent customData = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
-        // * Creates a new NBT compound with the property
-        NbtCompound nbt = customData.copyNbt();
-        nbt.putBoolean("FrostWalker", enabled);
-        // * Sets the updated component
-        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
     }
 
     // * Runs per tick while equipped by a player
     @Override
     public void tick(ItemStack stack, SlotReference reference) {
-        if (!(reference.entity() instanceof PlayerEntity player)) {
-            return;
-        }
-
-        if (player.isSpectator()) {
+        if (!(reference.entity() instanceof PlayerEntity player) || player.isSpectator()) {
             return;
         }
 
         // * Spawn particles, and freeze
-        if (!(player.getEntityWorld().isClient) && isFrostWalkerEnabled(stack)) {
+        if (!(player.getEntityWorld().isClient) && getAbilityState(stack) == 1) {
             // * Freeze all water sources around the player
             freezeWater(player.getEntityWorld(), player);
 

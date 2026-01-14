@@ -44,44 +44,36 @@ public class ChrysalisOfEternityItem extends GenericAccessoryItem {
     }
 
     @Override
-    public ItemStack getDefaultStack() {
-        ItemStack stack = super.getDefaultStack();
-        NbtCompound nbt = new NbtCompound();
-
-        nbt.putInt("AbilityState", 0);
-        nbt.putBoolean("AbilityLocked", false);
-
-        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
-        return stack;
-    }
-
-    @Override
     protected void onStateChanged(ItemStack stack, PlayerEntity player, int oldState, int newState) {
         World world = player.getWorld();
-        world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                newState == 1 ? SoundEvents.BLOCK_SOUL_SAND_BREAK : SoundEvents.BLOCK_SOUL_SAND_PLACE,
-                player.getSoundCategory(), 2f, 1.0f);
 
         Formatting formatting = newState == 1 ? Formatting.LIGHT_PURPLE : Formatting.GRAY;
 
         if (world.isClient) {
             player.sendMessage(Text.translatable("item.keepsakes.ability.status").formatted(Formatting.GRAY)
-                    .append(Text.literal(newState == 1 ? " ON" : " OFF").formatted(formatting)), true);
+                    .append(Text.literal(newState == 1 ? " On" : " Off").formatted(formatting)), true);
+
+            world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    newState == 1 ? SoundEvents.BLOCK_SOUL_SAND_BREAK : SoundEvents.BLOCK_SOUL_SAND_PLACE,
+                    player.getSoundCategory(), 2f, 1.0f);
         }
     }
 
     @Override
     protected void onStateChangeBlocked(ItemStack stack, PlayerEntity player, int currentState) {
-        player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.BLOCK_CHAIN_PLACE, player.getSoundCategory(), 0.5f, 0.8f);
+        World world = player.getWorld();
 
-        // Send locked message
-        if (player.getHealth() <= player.getMaxHealth() / 2f) {
-            player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
-                    .append(Text.translatable("item.keepsakes.chrysalis_of_eternity.ability_toggle_requirement").formatted(Formatting.RED)), true);
-        } else {
-            player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
-                    .append(Text.translatable("item.keepsakes.ability.locked")), true);
+        if (world.isClient) {
+            world.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.BLOCK_CHAIN_PLACE, player.getSoundCategory(), 0.5f, 0.8f);
+
+            if (player.getHealth() <= player.getMaxHealth() / 2f) {
+                player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
+                        .append(Text.translatable("item.keepsakes.chrysalis_of_eternity.ability_toggle_requirement").formatted(Formatting.RED)), true);
+            } else {
+                player.sendMessage(Text.translatable("item.keepsakes.ability.cycle_failed").formatted(Formatting.GRAY)
+                        .append(Text.translatable("item.keepsakes.ability.locked")), true);
+            }
         }
     }
 
@@ -131,16 +123,12 @@ public class ChrysalisOfEternityItem extends GenericAccessoryItem {
     // * Runs per tick while equipped by a player
     @Override
     public void tick(ItemStack stack, SlotReference reference) {
-        if (!(reference.entity() instanceof PlayerEntity player)) {
-            return;
-        }
-
-        if (player.isSpectator()) {
+        if (!(reference.entity() instanceof PlayerEntity player) || player.isSpectator()) {
             return;
         }
 
         // * Spawn particles
-        if (!(player.getEntityWorld().isClient) && getAbilityState(stack) == 1) {
+        if (getAbilityState(stack) == 1 && player.getWorld() instanceof ServerWorld serverWorld) {
             Random random = player.getEntityWorld().getRandom();
             if (random.nextFloat() < 0.4f) { // ? 40% chance each tick to spawn particles
                 double x = player.getX() + (random.nextFloat() * 2.0 - 1.0) * 0.5;
@@ -151,7 +139,7 @@ public class ChrysalisOfEternityItem extends GenericAccessoryItem {
                 double vy = random.nextFloat() * 0.05;
                 double vz = (random.nextFloat() * 2.0 - 1.0) * 0.01;
 
-                ((ServerWorld) player.getWorld()).spawnParticles(
+                serverWorld.spawnParticles(
                         ParticleTypes.SOUL, x, y, z, 1, vx, vy, vz, 0.0
                 );
             }
